@@ -59,7 +59,7 @@ Shader "Unlit/Point"
                 float2 position = coord - _Position * magic;
                 float distance = length(position);
                 float clamped = 1 - distance * 40;
-                float alpha = lerp(0, clamped, distance < 0.05) * 2;
+                float alpha = lerp(0, clamped, distance < 0.05) * 5;
 
                 return fixed4(_Color.xyz, alpha);
             }

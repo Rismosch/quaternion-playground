@@ -3,7 +3,7 @@ using UnityEditor;
 using System.Linq;
 
 public class GUIWindow : EditorWindow {
-    [MenuItem("Visualizing-Quaternions/GUIWindow")]
+    [MenuItem("Visualizing-Quaternions/GUIWindowSphereExamples")]
     private static void ShowWindow() {
         var window = GetWindow<GUIWindow>();
         window.titleContent = new GUIContent("GUIWindow");
@@ -28,6 +28,12 @@ public class GUIWindow : EditorWindow {
 
 
     private void OnGUI() {
+        if (!Application.isPlaying)
+        {
+            GUILayout.Label("more options in playmode");
+            return;
+        }
+
         SelectedExample = (Example)EditorGUILayout.EnumPopup(SelectedExample);
 
         switch (SelectedExample)

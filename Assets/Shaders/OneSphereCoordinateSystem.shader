@@ -54,14 +54,14 @@ Shader "Unlit/OneSphereCoordinateSystem"
                 float2 coord = (i.uv - 0.5) * 2;
                 float magic = 0.9;
 
-                // Coordinate System
+                // Coordinate System (unit sphere and x/y axis)
                 float diff = abs(magic - length(coord));
                 float isOnCircle = clamp(1 - diff * 100, 0, 1);
                 float isOnXAxis = clamp(1 - abs(coord.y) * 100, 0, 1);
                 float isOnYAxis = clamp(1 - abs(coord.x) * 100, 0, 1);
                 float isOnCoordinateSystem = isOnCircle + isOnXAxis + isOnYAxis;
 
-                // Projection
+                // Projection (dotted sine/cosine lines)
                 float2 pos = (coord - _Position * magic);
                 isOnXAxis = clamp(1 - abs(pos.y) * 100, 0, 1);
                 isOnYAxis = clamp(1 - abs(pos.x) * 100, 0, 1);
@@ -75,7 +75,16 @@ Shader "Unlit/OneSphereCoordinateSystem"
                 isOnYAxis = lerp(0, isOnYAxis, sign(_Position.y) == sign(coord.y));
                 float isOnProjection = isOnXAxis + isOnYAxis;
 
-                float alpha = isOnCoordinateSystem + isOnProjection;
+                // Hypothenuse
+                float slope = _Position.y / _Position.x;
+                float coordSlope = coord.y / coord.x;
+                float slopeDot = dot(_Position, float2(coord.y, -coord.x));
+                float isOnSlope = clamp(1 - abs(slopeDot) * 50, 0, 1);
+                isOnSlope *= isInsideCircle;
+                isOnSlope *= lerp(0, isOnSlope, sign(_Position.x) == sign(coord.x));
+                isOnSlope *= lerp(0, isOnSlope, sign(_Position.y) == sign(coord.y));
+
+                float alpha = isOnCoordinateSystem + isOnProjection + isOnSlope;
                 return fixed4(0, 0, 0, alpha);
             }
             ENDCG

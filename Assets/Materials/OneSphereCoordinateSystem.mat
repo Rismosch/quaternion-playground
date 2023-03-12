@@ -81,7 +81,7 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Noeerrth: {r: 1, g: 0, b: 0.3019608, a: 1}
     - _North: {r: 1, g: 0, b: 0.3019608, a: 1}
-    - _Position: {r: 0.045928486, g: 0.99894476, b: 0, a: 0}
+    - _Position: {r: 0.45918268, g: 0.88834184, b: 0, a: 0}
     - _South: {r: 0.16078432, g: 0.6784314, b: 1, a: 1}
     - _pNorth: {r: 1, g: 0, b: 1, a: 1}
   m_BuildTextureStacks: []

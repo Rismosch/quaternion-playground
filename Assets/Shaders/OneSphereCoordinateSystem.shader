@@ -76,8 +76,6 @@ Shader "Unlit/OneSphereCoordinateSystem"
                 float isOnProjection = isOnXAxis + isOnYAxis;
 
                 // Hypothenuse
-                float slope = _Position.y / _Position.x;
-                float coordSlope = coord.y / coord.x;
                 float slopeDot = dot(_Position, float2(coord.y, -coord.x));
                 float isOnSlope = clamp(1 - abs(slopeDot) * 50, 0, 1);
                 isOnSlope *= isInsideCircle;

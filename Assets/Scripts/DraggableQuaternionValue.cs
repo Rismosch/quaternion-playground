@@ -25,16 +25,21 @@ public class DraggableQuaternionValue : MonoBehaviour
     // Properties
     public bool IsPointerOver { get; set; }
 
-    // Members
-
     // Unity Event Methods
     private void Update()
     {
-        if (IsPointerOver)
+        if (IsPointerOver && Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            m_GlobalControl.CurrentlyDragging = this;
+        }
+
+        var isDraggingMe = m_GlobalControl.CurrentlyDragging == this;
+        var isDragging = m_GlobalControl.CurrentlyDragging != null;
+        var isHoveringMe = !isDragging && IsPointerOver;
+        if (isDraggingMe || isHoveringMe)
         {
             m_TmpText.fontStyle = TMPro.FontStyles.Bold;
-        }
-        else
+        } else
         {
             m_TmpText.fontStyle = TMPro.FontStyles.Normal;
         }

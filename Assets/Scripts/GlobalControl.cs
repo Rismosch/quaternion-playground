@@ -13,6 +13,9 @@ public class GlobalControl : MonoBehaviour
     [SerializeField] private GraphicRaycaster m_GraphicRaycaster;
     [SerializeField] private List<DraggableQuaternionValue> m_DraggableQuaternionValues;
 
+    // Properties
+    public DraggableQuaternionValue CurrentlyDragging = null;
+
     // Members
     private State State = new State();
 
@@ -92,6 +95,11 @@ public class GlobalControl : MonoBehaviour
             }
 
             draggableQuaternionValue.IsPointerOver = true;
+        }
+
+        if (!Input.GetKey(KeyCode.Mouse0))
+        {
+            CurrentlyDragging = null;
         }
     }
 }

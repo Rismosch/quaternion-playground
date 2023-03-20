@@ -7,7 +7,7 @@ public enum Sphere {
 public enum Notation {
     Complex,
     Quaternion,
-    Vector4,
+    Vector,
     AngleAxisRad,
     AngleAxisDeg,
 }

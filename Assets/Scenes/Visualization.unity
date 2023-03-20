@@ -4653,7 +4653,7 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: Quaternion
       m_Image: {fileID: 0}
-    - m_Text: Vector4
+    - m_Text: Vector
       m_Image: {fileID: 0}
     - m_Text: Angle Axis RAD
       m_Image: {fileID: 0}

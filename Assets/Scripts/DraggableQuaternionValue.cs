@@ -25,12 +25,17 @@ public class DraggableQuaternionValue : MonoBehaviour
     // Properties
     public bool IsPointerOver { get; set; }
 
-    // Unity Event Methods
-    private void Update()
+    // Members
+    private Vector3 m_StartPosition;
+
+    // Public Methods
+    public void ManualUpdate()
     {
+        // Handle PointerOver and Drag
         if (IsPointerOver && Input.GetKeyDown(KeyCode.Mouse0))
         {
             m_GlobalControl.CurrentlyDragging = this;
+            m_StartPosition = Input.mousePosition;
         }
 
         var isDraggingMe = m_GlobalControl.CurrentlyDragging == this;
@@ -42,6 +47,119 @@ public class DraggableQuaternionValue : MonoBehaviour
         } else
         {
             m_TmpText.fontStyle = TMPro.FontStyles.Normal;
+        }
+
+        if (isDraggingMe)
+        {
+            var currentPosition = Input.mousePosition;
+            var delta = Input.mousePosition - m_StartPosition;
+
+            Debug.Log(delta);
+        }
+
+        // Handle Visibility
+        var isAngleAxis =
+            m_GlobalControl.State.Notation == Notation.AngleAxisRad ||
+            m_GlobalControl.State.Notation == Notation.AngleAxisDeg;
+        bool isVisible;
+
+        if (isAngleAxis)
+        {
+            isVisible = true;
+        }
+        else
+        {
+            switch(m_GlobalControl.State.Sphere)
+            {
+                case Sphere.One:
+                    isVisible = ValueSample == Sample.q1 || ValueSample == Sample.q2;
+                    break;
+
+                case Sphere.Two:
+                    isVisible = ValueSample == Sample.q1 || ValueSample == Sample.q2 || ValueSample == Sample.q3;
+                    break;
+
+                case Sphere.Three:
+                default:
+                    isVisible = true;
+                    break;
+            }
+        }
+
+        gameObject.SetActive(isVisible);
+
+        // Handle DisplayText
+        switch(m_GlobalControl.State.Notation)
+        {
+            case Notation.Complex:
+                switch(ValueSample)
+                {
+                    case Sample.q0:
+                        break;
+                    case Sample.q1:
+                        break;
+                    case Sample.q2:
+                        break;
+                    case Sample.q3:
+                        break;
+                }
+                break;
+
+            case Notation.Quaternion:
+                switch(ValueSample)
+                {
+                    case Sample.q0:
+                        break;
+                    case Sample.q1:
+                        break;
+                    case Sample.q2:
+                        break;
+                    case Sample.q3:
+                        break;
+                }
+                break;
+
+            case Notation.Vector:
+                switch(ValueSample)
+                {
+                    case Sample.q0:
+                        break;
+                    case Sample.q1:
+                        break;
+                    case Sample.q2:
+                        break;
+                    case Sample.q3:
+                        break;
+                }
+                break;
+
+            case Notation.AngleAxisRad:
+                switch(ValueSample)
+                {
+                    case Sample.q0:
+                        break;
+                    case Sample.q1:
+                        break;
+                    case Sample.q2:
+                        break;
+                    case Sample.q3:
+                        break;
+                }
+                break;
+
+            case Notation.AngleAxisDeg:
+                switch(ValueSample)
+                {
+                    case Sample.q0:
+                        break;
+                    case Sample.q1:
+                        break;
+                    case Sample.q2:
+                        break;
+                    case Sample.q3:
+                        break;
+                }
+                break;
         }
     }
 }

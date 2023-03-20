@@ -14,10 +14,8 @@ public class GlobalControl : MonoBehaviour
     [SerializeField] private List<DraggableQuaternionValue> m_DraggableQuaternionValues;
 
     // Properties
-    public DraggableQuaternionValue CurrentlyDragging = null;
-
-    // Members
-    private State State = new State();
+    public DraggableQuaternionValue CurrentlyDragging { get; set; }= null;
+    public State State { get; }= new State();
 
     // Unity Event Methods
     private void Awake()
@@ -27,6 +25,7 @@ public class GlobalControl : MonoBehaviour
 
     private void Update()
     {
+        // Update UI State
         var newState = new State();
 
         switch(sphereDropdown.captionText.text)
@@ -50,8 +49,8 @@ public class GlobalControl : MonoBehaviour
             case "Quaternion":
                 newState.Notation = Notation.Quaternion;
                 break;
-            case "Vector4":
-                newState.Notation = Notation.Vector4;
+            case "Vector":
+                newState.Notation = Notation.Vector;
                 break;
             case "Angle Axis RAD":
                 newState.Notation = Notation.AngleAxisRad;
@@ -77,6 +76,7 @@ public class GlobalControl : MonoBehaviour
             Debug.Log($"state changed: {State}");
         }
 
+        // IsPointerOver and Drag
         foreach(var draggableQuaternionValue in m_DraggableQuaternionValues)
         {
             draggableQuaternionValue.IsPointerOver = false;
@@ -100,6 +100,12 @@ public class GlobalControl : MonoBehaviour
         if (!Input.GetKey(KeyCode.Mouse0))
         {
             CurrentlyDragging = null;
+        }
+
+        // Update DraggableQuaternionValues
+        foreach(var draggableQuaternionValue in m_DraggableQuaternionValues)
+        {
+            draggableQuaternionValue.ManualUpdate();
         }
     }
 }

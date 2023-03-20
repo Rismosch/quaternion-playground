@@ -1247,13 +1247,14 @@ GameObject:
   - component: {fileID: 575790311}
   - component: {fileID: 575790313}
   - component: {fileID: 575790312}
+  - component: {fileID: 575790314}
   m_Layer: 5
-  m_Name: DELETE THIS AFTERWARDS
+  m_Name: QuaternionNotation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &575790311
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1281,7 +1282,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 575790310}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
@@ -1294,7 +1295,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <mspace=0.75em>w=+1.00 x=+0.00 y=+0.00 z=+0.00</mspace>
+  m_text: <mspace=0.75em>q(     ,       ,       ,       )</mspace>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1371,6 +1372,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 575790310}
   m_CullTransparentMesh: 1
+--- !u!114 &575790314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 575790310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d63b7c1ab12d17940afde65a6ac53655, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_GlobalControl: {fileID: 1896995643}
+  m_TmpText: {fileID: 575790312}
 --- !u!1 &588457724
 GameObject:
   m_ObjectHideFlags: 0
@@ -2881,7 +2896,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_GlobalControl: {fileID: 1896995643}
-  ValueSample: 0
+  Value: 0
   m_TmpText: {fileID: 1035648877}
 --- !u!1 &1044001875
 GameObject:
@@ -3526,7 +3541,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_GlobalControl: {fileID: 1896995643}
-  ValueSample: 3
+  Value: 3
   m_TmpText: {fileID: 1494312878}
 --- !u!1 &1552886107
 GameObject:
@@ -4214,7 +4229,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_GlobalControl: {fileID: 1896995643}
-  ValueSample: 1
+  Value: 1
   m_TmpText: {fileID: 1812528253}
 --- !u!1 &1818302568
 GameObject:
@@ -5857,5 +5872,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_GlobalControl: {fileID: 1896995643}
-  ValueSample: 2
+  Value: 2
   m_TmpText: {fileID: 2136893586}

@@ -2,40 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//                00000000111111112222222233333333
-// <mspace=0.75em> + 1.00 + 0.00i + 0.00j + 0.00k</mspace>
-// <mspace=0.75em>q(+1.00,  +0.00,  +0.00,  +0.00)</mspace>
-// <mspace=0.75em>w=+1.00 x=+0.00 y=+0.00 z=+0.00</mspace>
-// <mspace=0.75em>θ=+1.00 x=+0.00 y=+0.00 z=+0.00</mspace>
-
 public class DraggableQuaternionValue : MonoBehaviour
 {
-    public enum Sample {
-        q0,
-        q1,
-        q2,
-        q3
-    }
-
     // Unity Members
     [SerializeField] private GlobalControl m_GlobalControl;
-    [SerializeField] private Sample ValueSample;
+    [SerializeField] private QuaternionValue Value;
     [SerializeField] private TMPro.TMP_Text m_TmpText;
 
     // Properties
     public bool IsPointerOver { get; set; }
 
-    // Members
-    private Vector3 m_StartPosition;
-
     // Public Methods
     public void ManualUpdate()
     {
         // Handle PointerOver and Drag
+        var mouseScrollDelta = Input.mouseScrollDelta;
+        if (IsPointerOver && mouseScrollDelta != Vector2.zero)
+        {
+            mouseScrollDelta.y *= 0.01f;
+
+            m_GlobalControl.State.Drag(mouseScrollDelta.y, Value);
+        }
+
         if (IsPointerOver && Input.GetKeyDown(KeyCode.Mouse0))
         {
             m_GlobalControl.CurrentlyDragging = this;
-            m_StartPosition = Input.mousePosition;
+            m_GlobalControl.PreviousDragPosition = Input.mousePosition;
         }
 
         var isDraggingMe = m_GlobalControl.CurrentlyDragging == this;
@@ -52,9 +44,17 @@ public class DraggableQuaternionValue : MonoBehaviour
         if (isDraggingMe)
         {
             var currentPosition = Input.mousePosition;
-            var delta = Input.mousePosition - m_StartPosition;
+            var delta = Input.mousePosition - m_GlobalControl.PreviousDragPosition;
+            m_GlobalControl.PreviousDragPosition = currentPosition;
 
-            Debug.Log(delta);
+            delta *= 0.01f;
+
+            if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+            {
+                delta *= 0.1f;
+            }
+
+            m_GlobalControl.State.Drag(delta.y, Value);
         }
 
         // Handle Visibility
@@ -72,11 +72,11 @@ public class DraggableQuaternionValue : MonoBehaviour
             switch(m_GlobalControl.State.Sphere)
             {
                 case Sphere.One:
-                    isVisible = ValueSample == Sample.q1 || ValueSample == Sample.q2;
+                    isVisible = Value == QuaternionValue.q1 || Value == QuaternionValue.q2;
                     break;
 
                 case Sphere.Two:
-                    isVisible = ValueSample == Sample.q1 || ValueSample == Sample.q2 || ValueSample == Sample.q3;
+                    isVisible = Value == QuaternionValue.q1 || Value == QuaternionValue.q2 || Value == QuaternionValue.q3;
                     break;
 
                 case Sphere.Three:
@@ -88,78 +88,116 @@ public class DraggableQuaternionValue : MonoBehaviour
 
         gameObject.SetActive(isVisible);
 
+        // Handle Values
+        float q0 = 0;
+        float q1 = 0;
+        float q2 = 0;
+        float q3 = 0;
+
+        switch(m_GlobalControl.State.Sphere)
+        {
+            case Sphere.One:
+                q1 = m_GlobalControl.State.OneSpherePosition.x;
+                q2 = m_GlobalControl.State.OneSpherePosition.y;
+                break;
+            case Sphere.Two:
+                q1 = m_GlobalControl.State.TwoSpherePosition.x;
+                q2 = m_GlobalControl.State.TwoSpherePosition.y;
+                q3 = m_GlobalControl.State.TwoSpherePosition.z;
+                break;
+            case Sphere.Three:
+                q0 = m_GlobalControl.State.ThreeSpherePosition.w;
+                q1 = m_GlobalControl.State.ThreeSpherePosition.x;
+                q2 = m_GlobalControl.State.ThreeSpherePosition.y;
+                q3 = m_GlobalControl.State.ThreeSpherePosition.z;
+                break;
+        }
+
+//                00000000111111112222222233333333
+// <mspace=0.75em> + 1.00 + 0.00i + 0.00j + 0.00k</mspace>
+// <mspace=0.75em>q(+1.00,  +0.00,  +0.00,  +0.00)</mspace>
+// <mspace=0.75em>w=+1.00 x=+0.00 y=+0.00 z=+0.00</mspace>
+// <mspace=0.75em>θ=+1.00 x=+0.00 y=+0.00 z=+0.00</mspace>
+
         // Handle DisplayText
+        string displayText = "";
         switch(m_GlobalControl.State.Notation)
         {
             case Notation.Complex:
-                switch(ValueSample)
+                switch(Value)
                 {
-                    case Sample.q0:
+                    case QuaternionValue.q0:
+                        displayText = $" {(q0 < 0 ? '-' : ' ')} {Mathf.Abs(q0):0.00} ";
                         break;
-                    case Sample.q1:
+                    case QuaternionValue.q1:
+                        displayText = $"{(q1 < 0 ? '-' : (m_GlobalControl.State.Sphere != Sphere.Three ? ' ' : '+'))} {Mathf.Abs(q1):0.00}i ";
                         break;
-                    case Sample.q2:
+                    case QuaternionValue.q2:
+                        displayText = $"{(q2 < 0 ? '-' : '+')} {Mathf.Abs(q2):0.00}{(m_GlobalControl.State.Sphere == Sphere.One ? ' ' : 'j')} ";
                         break;
-                    case Sample.q3:
+                    case QuaternionValue.q3:
+                        displayText = $"{(q3 < 0 ? '-' : '+')} {Mathf.Abs(q3):0.00}{(m_GlobalControl.State.Sphere == Sphere.Two ? ' ' : 'k')} ";
                         break;
                 }
                 break;
 
             case Notation.Quaternion:
-                switch(ValueSample)
+                switch(Value)
                 {
-                    case Sample.q0:
+                    case QuaternionValue.q0:
                         break;
-                    case Sample.q1:
+                    case QuaternionValue.q1:
                         break;
-                    case Sample.q2:
+                    case QuaternionValue.q2:
                         break;
-                    case Sample.q3:
+                    case QuaternionValue.q3:
                         break;
                 }
                 break;
 
             case Notation.Vector:
-                switch(ValueSample)
+                switch(Value)
                 {
-                    case Sample.q0:
+                    case QuaternionValue.q0:
                         break;
-                    case Sample.q1:
+                    case QuaternionValue.q1:
                         break;
-                    case Sample.q2:
+                    case QuaternionValue.q2:
                         break;
-                    case Sample.q3:
+                    case QuaternionValue.q3:
                         break;
                 }
                 break;
 
             case Notation.AngleAxisRad:
-                switch(ValueSample)
+                switch(Value)
                 {
-                    case Sample.q0:
+                    case QuaternionValue.q0:
                         break;
-                    case Sample.q1:
+                    case QuaternionValue.q1:
                         break;
-                    case Sample.q2:
+                    case QuaternionValue.q2:
                         break;
-                    case Sample.q3:
+                    case QuaternionValue.q3:
                         break;
                 }
                 break;
 
             case Notation.AngleAxisDeg:
-                switch(ValueSample)
+                switch(Value)
                 {
-                    case Sample.q0:
+                    case QuaternionValue.q0:
                         break;
-                    case Sample.q1:
+                    case QuaternionValue.q1:
                         break;
-                    case Sample.q2:
+                    case QuaternionValue.q2:
                         break;
-                    case Sample.q3:
+                    case QuaternionValue.q3:
                         break;
                 }
                 break;
         }
+
+        m_TmpText.text = $"<mspace=0.75em>{displayText}</mspace>";
     }
 }

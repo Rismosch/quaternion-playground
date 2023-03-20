@@ -14,7 +14,8 @@ public class GlobalControl : MonoBehaviour
     [SerializeField] private List<DraggableQuaternionValue> m_DraggableQuaternionValues;
 
     // Properties
-    public DraggableQuaternionValue CurrentlyDragging { get; set; }= null;
+    public DraggableQuaternionValue CurrentlyDragging { get; set; } = null;
+    public Vector3 PreviousDragPosition { get; set; }
     public State State { get; }= new State();
 
     // Unity Event Methods

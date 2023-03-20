@@ -16,3 +16,10 @@ public enum Projection {
     Overlapped,
     Seperated
 }
+
+public enum QuaternionValue {
+    q0,
+    q1,
+    q2,
+    q3
+}

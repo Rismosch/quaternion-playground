@@ -94,10 +94,18 @@ public class State
                 {
                     case QuaternionValue.q1:
                         OneSpherePosition.x = Mathf.Clamp(OneSpherePosition.x + delta, -1, 1);
+                        if (OneSpherePosition.x < 0.01f && OneSpherePosition.x > 0.01f)
+                        {
+                            OneSpherePosition.x = 0;
+                        }
                         OneSpherePosition.y = Mathf.Sqrt(1 - OneSpherePosition.x * OneSpherePosition.x);
                         break;
                     case QuaternionValue.q2:
                         OneSpherePosition.y = Mathf.Clamp(OneSpherePosition.y + delta, -1, 1);
+                        if (OneSpherePosition.y < 0.01f && OneSpherePosition.y > 0.01f)
+                        {
+                            OneSpherePosition.y = 0;
+                        }
                         OneSpherePosition.x = Mathf.Sqrt(1 - OneSpherePosition.y * OneSpherePosition.y);
                         break;
                 }
@@ -107,29 +115,42 @@ public class State
                 {
                     case QuaternionValue.q1:
                         TwoSpherePosition.x = Mathf.Clamp(TwoSpherePosition.x + delta, -1, 1);
+                        if (TwoSpherePosition.x < 0.01f && TwoSpherePosition.x > -0.01f)
+                        {
+                            TwoSpherePosition.x = 0;
+                        }
                         TwoSphereAngleXY = Mathf.Atan2(TwoSpherePosition.y, TwoSpherePosition.x);
                         TwoSphereAngleXZ = Mathf.Atan2(TwoSpherePosition.z, TwoSpherePosition.x);
-                        var radiusZY = 1 - Mathf.Abs(TwoSpherePosition.x);
+                        var radiusZY = Mathf.Sqrt(1 - TwoSpherePosition.x * TwoSpherePosition.x);
                         TwoSpherePosition.y = radiusZY * Mathf.Sin(TwoSphereAngleZY);
                         TwoSpherePosition.z = radiusZY * Mathf.Cos(TwoSphereAngleZY);
                         break;
                     case QuaternionValue.q2:
                         TwoSpherePosition.y = Mathf.Clamp(TwoSpherePosition.y + delta, -1, 1);
+                        if (TwoSpherePosition.y < 0.01f && TwoSpherePosition.y > -0.01f)
+                        {
+                            TwoSpherePosition.y = 0;
+                        }
                         TwoSphereAngleXY = Mathf.Atan2(TwoSpherePosition.y, TwoSpherePosition.x);
                         TwoSphereAngleZY = Mathf.Atan2(TwoSpherePosition.y, TwoSpherePosition.z);
-                        var radiusXZ = 1 - Mathf.Abs(TwoSpherePosition.y);
+                        var radiusXZ = Mathf.Sqrt(1 - TwoSpherePosition.y * TwoSpherePosition.y);
                         TwoSpherePosition.x = radiusXZ * Mathf.Cos(TwoSphereAngleXZ + Mathf.PI);
                         TwoSpherePosition.z = radiusXZ * Mathf.Sin(TwoSphereAngleXZ + Mathf.PI);
                         break;
                     case QuaternionValue.q3:
                         TwoSpherePosition.z = Mathf.Clamp(TwoSpherePosition.z + delta, -1, 1);
+                        if (TwoSpherePosition.z < 0.01f && TwoSpherePosition.z > -0.01f)
+                        {
+                            TwoSpherePosition.z = 0;
+                        }
                         TwoSphereAngleXZ = Mathf.Atan2(TwoSpherePosition.z, TwoSpherePosition.x);
                         TwoSphereAngleZY = Mathf.Atan2(TwoSpherePosition.y, TwoSpherePosition.z);
-                        var radiusXY = 1 - Mathf.Abs(TwoSpherePosition.z);
+                        var radiusXY = Mathf.Sqrt(1 - TwoSpherePosition.z * TwoSpherePosition.z);
                         TwoSpherePosition.x = radiusXY * Mathf.Cos(TwoSphereAngleXY);
                         TwoSpherePosition.y = radiusXY * Mathf.Sin(TwoSphereAngleXY);
                         break;
                 }
+                Debug.Log(TwoSpherePosition.x*TwoSpherePosition.x+TwoSpherePosition.y*TwoSpherePosition.y+TwoSpherePosition.z*TwoSpherePosition.z);
                 break;
             case Sphere.Three:
                 break;

@@ -2671,7 +2671,7 @@ GameObject:
   - component: {fileID: 1012887333}
   - component: {fileID: 1012887334}
   m_Layer: 5
-  m_Name: Toggle
+  m_Name: Animate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2746,7 +2746,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!1 &1035648875
 GameObject:
   m_ObjectHideFlags: 0

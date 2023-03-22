@@ -27,54 +27,75 @@ public class GlobalControl : MonoBehaviour
     private void Update()
     {
         // Update UI State
-        var newState = new State();
-
+        var sphereChanged = false;
         switch(sphereDropdown.captionText.text)
         {
             case "2D":
-                newState.Sphere = Sphere.One;
+                if (State.Sphere != Sphere.One)
+                {
+                    State.Sphere = Sphere.One;
+                    sphereChanged = true;
+                }
                 break;
             case "3D":
-                newState.Sphere = Sphere.Two;
+                if (State.Sphere != Sphere.Two)
+                {
+                    State.Sphere = Sphere.Two;
+                    sphereChanged = true;
+                }
                 break;
             case "4D":
-                newState.Sphere = Sphere.Three;
+                if (State.Sphere != Sphere.Three)
+                {
+                    State.Sphere = Sphere.Three;
+                    sphereChanged = true;
+                }
                 break;
+        }
+
+        if (sphereChanged)
+        {
+            var options = new List<TMPro.TMP_Dropdown.OptionData>();
+            options.Add(new TMPro.TMP_Dropdown.OptionData("Complex"));
+            options.Add(new TMPro.TMP_Dropdown.OptionData("Quaternion"));
+            options.Add(new TMPro.TMP_Dropdown.OptionData("Vector"));
+            if (State.Sphere == Sphere.Three)
+            {
+                options.Add(new TMPro.TMP_Dropdown.OptionData("Angle Axis RAD"));
+                options.Add(new TMPro.TMP_Dropdown.OptionData("Angle Axis DEG"));
+            }
+
+            notationDropdown.ClearOptions();
+            notationDropdown.AddOptions(options);
         }
 
         switch(notationDropdown.captionText.text)
         {
             case "Complex":
-                newState.Notation = Notation.Complex;
+                State.Notation = Notation.Complex;
                 break;
             case "Quaternion":
-                newState.Notation = Notation.Quaternion;
+                State.Notation = Notation.Quaternion;
                 break;
             case "Vector":
-                newState.Notation = Notation.Vector;
+                State.Notation = Notation.Vector;
                 break;
             case "Angle Axis RAD":
-                newState.Notation = Notation.AngleAxisRad;
+                State.Notation = Notation.AngleAxisRad;
                 break;
             case "Angle Axis DEG":
-                newState.Notation = Notation.AngleAxisDeg;
+                State.Notation = Notation.AngleAxisDeg;
                 break;
         }
 
         switch(projectionDropdown.captionText.text)
         {
             case "Overlapped":
-                newState.Projection = Projection.Overlapped;
+                State.Projection = Projection.Overlapped;
                 break;
             case "Seperated":
-                newState.Projection = Projection.Seperated;
+                State.Projection = Projection.Seperated;
                 break;
-        }
-
-        State.Update(newState, out var changed);
-        if (changed)
-        {
-            Debug.Log($"state changed: {State}");
         }
 
         // IsPointerOver and Drag

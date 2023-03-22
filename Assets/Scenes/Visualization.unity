@@ -4670,10 +4670,6 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: Vector
       m_Image: {fileID: 0}
-    - m_Text: Angle Axis RAD
-      m_Image: {fileID: 0}
-    - m_Text: Angle Axis DEG
-      m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []

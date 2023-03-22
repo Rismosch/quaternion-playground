@@ -11,7 +11,7 @@ public class QuaternionNotation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        m_TmpText.enabled = m_GlobalControl.State.Notation == Notation.Vector;
+        m_TmpText.enabled = m_GlobalControl.State.Notation == Notation.Quaternion;
 
         switch(m_GlobalControl.State.Sphere)
         {

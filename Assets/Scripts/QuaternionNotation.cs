@@ -16,10 +16,10 @@ public class QuaternionNotation : MonoBehaviour
         switch(m_GlobalControl.State.Sphere)
         {
             case Sphere.One:
-                m_TmpText.text = "<mspace=0.75em>      q(       ,       )</mspace>";
+                m_TmpText.text = "<mspace=0.75em>        q(     ,       )</mspace>";
                 break;
             case Sphere.Two:
-                m_TmpText.text = "<mspace=0.75em>      q(       ,       ,       )</mspace>";
+                m_TmpText.text = "<mspace=0.75em>        q(     ,       ,       )</mspace>";
                 break;
             case Sphere.Three:
                 m_TmpText.text = "<mspace=0.75em>q(     ,       ,       ,       )</mspace>";

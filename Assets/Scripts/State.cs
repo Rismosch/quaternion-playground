@@ -2,19 +2,20 @@ using UnityEngine;
 
 public class State
 {
-    // Members
+    // Public Members
     public Sphere Sphere = Sphere.One;
     public Notation Notation = Notation.Complex;
     public Projection Projection = Projection.Overlapped;
 
     public Vector2 OneSpherePosition = new Vector2(0, 1);
-
     public Vector3 TwoSpherePosition = new Vector3(0, 0, 1);
-    public float TwoSphereAngleXY;
-    public float TwoSphereAngleXZ;
-    public float TwoSphereAngleZY;
-
     public Vector4 ThreeSpherePosition = new Vector4(1, 0, 0, 0);
+
+    // Private Members
+    private Vector2 TwoSphereCachedVectorXY = new Vector2(1, 0);
+    private Vector2 TwoSphereCachedVectorXZ = new Vector2(0, 1);
+    private Vector2 TwoSphereCachedVectorYZ = new Vector2(0, 1);
+
 
     // Public Methods
     public void Reset(QuaternionValue quaternionValue)
@@ -51,9 +52,9 @@ public class State
                         TwoSpherePosition = new Vector3(0, 0, 1);
                         break;
                 }
-                TwoSphereAngleXY = 0;
-                TwoSphereAngleXZ = 0;
-                TwoSphereAngleZY = 0;
+                TwoSphereCachedVectorXY = new Vector2(1, 0);
+                TwoSphereCachedVectorXZ = new Vector2(0, 1);
+                TwoSphereCachedVectorYZ = new Vector2(0, 1);
                 break;
             case Sphere.Three:
                 break;
@@ -88,30 +89,35 @@ public class State
                 {
                     case QuaternionValue.q1:
                         TwoSpherePosition.x = Clamp(TwoSpherePosition.x + delta);
-                        TwoSphereAngleXY = Mathf.Atan2(TwoSpherePosition.y, TwoSpherePosition.x);
-                        TwoSphereAngleXZ = Mathf.Atan2(TwoSpherePosition.z, TwoSpherePosition.x);
-                        var radiusZY = Mathf.Sqrt(1 - TwoSpherePosition.x * TwoSpherePosition.x);
-                        TwoSpherePosition.y = Clamp(radiusZY * Mathf.Sin(TwoSphereAngleZY));
-                        TwoSpherePosition.z = Clamp(radiusZY * Mathf.Cos(TwoSphereAngleZY));
+                        var radiusYZ = Mathf.Sqrt(1 - TwoSpherePosition.x * TwoSpherePosition.x);
+                        var scaledYZ = radiusYZ * TwoSphereCachedVectorYZ.normalized;
+                        TwoSpherePosition.y = Clamp(scaledYZ.x);
+                        TwoSpherePosition.z = Clamp(scaledYZ.y);
+
+                        TwoSphereCachedVectorXY = new Vector2(TwoSpherePosition.x, TwoSpherePosition.y);
+                        TwoSphereCachedVectorXZ = new Vector2(TwoSpherePosition.x, TwoSpherePosition.z);
                         break;
                     case QuaternionValue.q2:
                         TwoSpherePosition.y = Clamp(TwoSpherePosition.y + delta);
-                        TwoSphereAngleXY = Mathf.Atan2(TwoSpherePosition.y, TwoSpherePosition.x);
-                        TwoSphereAngleZY = Mathf.Atan2(TwoSpherePosition.y, TwoSpherePosition.z);
                         var radiusXZ = Mathf.Sqrt(1 - TwoSpherePosition.y * TwoSpherePosition.y);
-                        TwoSpherePosition.x = Clamp(radiusXZ * Mathf.Cos(TwoSphereAngleXZ + Mathf.PI));
-                        TwoSpherePosition.z = (radiusXZ * Mathf.Sin(TwoSphereAngleXZ + Mathf.PI));
+                        var scaledXZ = radiusXZ * TwoSphereCachedVectorXZ.normalized;
+                        TwoSpherePosition.x = Clamp(scaledXZ.x);
+                        TwoSpherePosition.z = Clamp(scaledXZ.y);
+
+                        TwoSphereCachedVectorXY = new Vector2(TwoSpherePosition.x, TwoSpherePosition.y);
+                        TwoSphereCachedVectorYZ = new Vector2(TwoSpherePosition.y, TwoSpherePosition.z);
                         break;
                     case QuaternionValue.q3:
                         TwoSpherePosition.z = Clamp(TwoSpherePosition.z + delta);
-                        TwoSphereAngleXZ = Mathf.Atan2(TwoSpherePosition.z, TwoSpherePosition.x);
-                        TwoSphereAngleZY = Mathf.Atan2(TwoSpherePosition.y, TwoSpherePosition.z);
                         var radiusXY = Mathf.Sqrt(1 - TwoSpherePosition.z * TwoSpherePosition.z);
-                        TwoSpherePosition.x = Clamp(radiusXY * Mathf.Cos(TwoSphereAngleXY));
-                        TwoSpherePosition.y = Clamp(radiusXY * Mathf.Sin(TwoSphereAngleXY));
+                        var scaledXY = radiusXY * TwoSphereCachedVectorXY.normalized;
+                        TwoSpherePosition.x = Clamp(scaledXY.x);
+                        TwoSpherePosition.y = Clamp(scaledXY.y);
+                        
+                        TwoSphereCachedVectorXZ = new Vector2(TwoSpherePosition.x, TwoSpherePosition.z);
+                        TwoSphereCachedVectorYZ = new Vector2(TwoSpherePosition.y, TwoSpherePosition.z);
                         break;
                 }
-                Debug.Log($"({TwoSpherePosition.x}, {TwoSpherePosition.y}, {TwoSpherePosition.z})");
                 break;
             case Sphere.Three:
                 break;

@@ -55,6 +55,26 @@ public class GlobalControl : MonoBehaviour
 
         if (sphereChanged)
         {
+            var index = 0;
+            switch(notationDropdown.captionText.text)
+            {
+                case "Complex":
+                    index = 0;
+                    break;
+                case "Quaternion":
+                    index = 1;
+                    break;
+                case "Vector":
+                    index = 2;
+                    break;
+                case "Angle Axis RAD":
+                    index = 3;
+                    break;
+                case "Angle Axis DEG":
+                    index = 4;
+                    break;
+            }
+
             var options = new List<TMPro.TMP_Dropdown.OptionData>();
             options.Add(new TMPro.TMP_Dropdown.OptionData("Complex"));
             options.Add(new TMPro.TMP_Dropdown.OptionData("Quaternion"));
@@ -63,10 +83,12 @@ public class GlobalControl : MonoBehaviour
             {
                 options.Add(new TMPro.TMP_Dropdown.OptionData("Angle Axis RAD"));
                 options.Add(new TMPro.TMP_Dropdown.OptionData("Angle Axis DEG"));
+                index = Mathf.Clamp(index, 0, 2);
             }
 
             notationDropdown.ClearOptions();
             notationDropdown.AddOptions(options);
+            notationDropdown.SetValueWithoutNotify(index);
         }
 
         switch(notationDropdown.captionText.text)

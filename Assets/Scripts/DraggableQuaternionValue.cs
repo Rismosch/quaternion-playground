@@ -120,12 +120,6 @@ public class DraggableQuaternionValue : MonoBehaviour
                 break;
         }
 
-//                00000000111111112222222233333333
-// <mspace=0.75em> + 1.00 + 0.00i + 0.00j + 0.00k</mspace>
-// <mspace=0.75em>q(+1.00,  +0.00,  +0.00,  +0.00)</mspace>
-// <mspace=0.75em>w=+1.00 x=+0.00 y=+0.00 z=+0.00</mspace>
-// <mspace=0.75em>θ=+1.00 x=+0.00 y=+0.00 z=+0.00</mspace>
-
         // Handle DisplayText
         string displayText = "";
         switch(m_GlobalControl.State.Notation)

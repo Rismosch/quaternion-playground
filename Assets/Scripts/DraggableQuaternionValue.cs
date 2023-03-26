@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DraggableQuaternionValue : MonoBehaviour
+public class DraggableQuaternionValue : MonoBehaviour, IDraggable
 {
     // Unity Members
     [SerializeField] private GlobalControl m_GlobalControl;

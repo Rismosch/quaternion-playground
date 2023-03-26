@@ -9,7 +9,7 @@ public class State
 
     public Vector2 OneSpherePosition = new Vector2(0, 1);
     public Vector3 TwoSpherePosition = new Vector3(0, 0, 1);
-    public Vector4 ThreeSpherePosition = new Vector4(1, 0, 0, 0);
+    public Vector4 ThreeSpherePosition = new Vector4(0, 0, 0, 1);
 
     // Private Members
     private Vector2 TwoSphereCachedVectorXY = new Vector2(1, 0);

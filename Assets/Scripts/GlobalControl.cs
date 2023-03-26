@@ -11,17 +11,28 @@ public class GlobalControl : MonoBehaviour
     [SerializeField] private TMPro.TMP_Dropdown notationDropdown;
     [SerializeField] private TMPro.TMP_Dropdown projectionDropdown;
     [SerializeField] private GraphicRaycaster m_GraphicRaycaster;
-    [SerializeField] private List<DraggableQuaternionValue> m_DraggableQuaternionValues;
+    [SerializeField] private List<GameObject> m_DraggableGameObjects;
 
     // Properties
     public DraggableQuaternionValue CurrentlyDragging { get; set; } = null;
     public Vector3 PreviousDragPosition { get; set; }
     public State State { get; }= new State();
 
+    // Members
+    private readonly List<IDraggable> m_Draggables = new List<IDraggable>();
+
     // Unity Event Methods
     private void Awake()
     {
-        m_GraphicRaycaster = GetComponent<GraphicRaycaster>();
+        m_Draggables.Clear();
+        foreach(var draggableGameObject in m_DraggableGameObjects)
+        {
+            var draggable = draggableGameObject.GetComponent<IDraggable>();
+            if (draggable != null)
+            {
+                m_Draggables.Add(draggable);
+            }
+        }
     }
 
     private void Update()
@@ -121,9 +132,9 @@ public class GlobalControl : MonoBehaviour
         }
 
         // IsPointerOver and Drag
-        foreach(var draggableQuaternionValue in m_DraggableQuaternionValues)
+        foreach(var draggable in m_Draggables)
         {
-            draggableQuaternionValue.IsPointerOver = false;
+            draggable.IsPointerOver = false;
         }
 
         var pointerEventData = new PointerEventData(EventSystem.current);
@@ -132,13 +143,13 @@ public class GlobalControl : MonoBehaviour
         EventSystem.current.RaycastAll(pointerEventData, results);
         foreach(var result in results)
         {
-            var draggableQuaternionValue = result.gameObject?.GetComponent<DraggableQuaternionValue>();
-            if (draggableQuaternionValue == null)
+            var draggable = result.gameObject?.GetComponent<IDraggable>();
+            if (draggable == null)
             {
                 continue;
             }
 
-            draggableQuaternionValue.IsPointerOver = true;
+            draggable.IsPointerOver = true;
         }
 
         if (!Input.GetKey(KeyCode.Mouse0))
@@ -147,9 +158,9 @@ public class GlobalControl : MonoBehaviour
         }
 
         // Update DraggableQuaternionValues
-        foreach(var draggableQuaternionValue in m_DraggableQuaternionValues)
+        foreach(var draggable in m_Draggables)
         {
-            draggableQuaternionValue.ManualUpdate();
+            draggable.ManualUpdate();
         }
     }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LabelScaleRotator : MonoBehaviour
+public class LabelRotator : MonoBehaviour
 {
     // Unity Members
     [SerializeField] private Transform m_Camera;
@@ -13,19 +13,10 @@ public class LabelScaleRotator : MonoBehaviour
     [SerializeField] private string m_QuaternionText;
     [SerializeField] private string m_VectorText;
 
-    [Header("DEBUG")]
-    [SerializeField] private float m_Distance;
-    [SerializeField] private float m_ScaleFactor = 0.5f;
-
     // Update is called once per frame
     void Update()
     {
         this.transform.localRotation = m_Camera.rotation;
-
-        var diff = this.transform.position - m_Camera.position;
-        m_Distance = diff.magnitude;
-
-        this.transform.localScale = m_ScaleFactor * m_Distance * 0.01f * Vector3.one;
 
         switch(m_GlobalControl.State.Notation)
         {

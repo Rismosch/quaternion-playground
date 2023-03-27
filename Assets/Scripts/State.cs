@@ -20,43 +20,39 @@ public class State
     // Public Methods
     public void Reset(QuaternionValue quaternionValue)
     {
-        if (Notation == Notation.AngleAxisRad || Notation == Notation.AngleAxisDeg)
-        {
-            Debug.LogError("not implemented yet");
-            return;
-        }
-
+        var quaternion = new Vector4();
         switch(Sphere)
         {
             case Sphere.One:
-                switch(quaternionValue)
-                {
-                    case QuaternionValue.q1:
-                    OneSpherePosition = new Vector2(1, 0);
-                        break;
-                    case QuaternionValue.q2:
-                    OneSpherePosition = new Vector2(0, 1);
-                        break;
-                }
+                quaternion.x = OneSpherePosition.x;
+                quaternion.y = OneSpherePosition.y;
                 break;
             case Sphere.Two:
-                switch(quaternionValue)
-                {
-                    case QuaternionValue.q1:
-                        TwoSpherePosition = new Vector3(1, 0, 0);
-                        break;
-                    case QuaternionValue.q2:
-                        TwoSpherePosition = new Vector3(0, 1, 0);
-                        break;
-                    case QuaternionValue.q3:
-                        TwoSpherePosition = new Vector3(0, 0, 1);
-                        break;
-                }
-                TwoSphereCachedVectorXY = new Vector2(1, 0);
-                TwoSphereCachedVectorXZ = new Vector2(0, 1);
-                TwoSphereCachedVectorYZ = new Vector2(0, 1);
+                quaternion.x = TwoSpherePosition.x;
+                quaternion.y = TwoSpherePosition.y;
+                quaternion.z = TwoSpherePosition.z;
                 break;
             case Sphere.Three:
+                quaternion.w = ThreeSpherePosition.w;
+                quaternion.x = ThreeSpherePosition.x;
+                quaternion.y = ThreeSpherePosition.y;
+                quaternion.z = ThreeSpherePosition.z;
+                break;
+        }
+
+        switch(quaternionValue)
+        {
+            case QuaternionValue.q0:
+                Drag(-quaternion.w, quaternionValue);
+                break;
+            case QuaternionValue.q1:
+                Drag(-quaternion.x, quaternionValue);
+                break;
+            case QuaternionValue.q2:
+                Drag(-quaternion.y, quaternionValue);
+                break;
+            case QuaternionValue.q3:
+                Drag(-quaternion.z, quaternionValue);
                 break;
         }
     }

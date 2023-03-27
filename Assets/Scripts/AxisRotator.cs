@@ -11,7 +11,7 @@ public class AxisRotator : MonoBehaviour
     [SerializeField] private bool m_IsY;
     
     // Unity Event Methods
-    private void Update()
+    private void LateUpdate()
     {
         var cameraUp = m_Camera.rotation * Vector3.up;
         var forward = Vector3.Cross(cameraUp, m_Right);

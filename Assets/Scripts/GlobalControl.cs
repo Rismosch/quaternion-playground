@@ -35,7 +35,7 @@ public class GlobalControl : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         // Update UI State
         var sphereChanged = false;

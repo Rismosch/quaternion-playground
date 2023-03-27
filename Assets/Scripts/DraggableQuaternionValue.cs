@@ -63,6 +63,12 @@ public class DraggableQuaternionValue : MonoBehaviour, IDraggable
             m_GlobalControl.State.Drag(delta.y, Value);
         }
 
+        // Reset
+        if (IsPointerOver && Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            m_GlobalControl.State.Reset(Value);
+        }
+
         // Handle Visibility
         var isAngleAxis =
             m_GlobalControl.State.Notation == Notation.AngleAxisRad ||

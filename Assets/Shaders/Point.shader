@@ -11,6 +11,8 @@ Shader "Unlit/Point"
         Tags { "RenderType"="Opaque" }
         LOD 100
         Blend SrcAlpha OneMinusSrcAlpha
+        cull Off
+        ZTest Always
 
         Pass
         {
@@ -58,10 +60,11 @@ Shader "Unlit/Point"
 
                 float2 position = coord - _Position * magic;
                 float distance = length(position);
-                float clamped = 1 - distance * 40;
+                float clamped = 1 - distance * 10;
                 float alpha = lerp(0, clamped, distance < 0.05) * 5;
+                alpha = clamp(alpha, 0, 1);
 
-                return fixed4(_Color.xyz, alpha);
+                return fixed4(_Color.rgb, alpha);
             }
             ENDCG
         }

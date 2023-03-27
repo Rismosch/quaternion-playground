@@ -56,9 +56,8 @@ Shader "Unlit/Point"
             fixed4 frag (v2f i) : SV_Target
             {
                 float2 coord = (i.uv - 0.5) * 2;
-                float magic = 0.9;
 
-                float2 position = coord - _Position * magic;
+                float2 position = coord - _Position * 0.9;
                 float distance = length(position);
                 float clamped = 1 - distance * 10;
                 float alpha = lerp(0, clamped, distance < 0.05) * 5;

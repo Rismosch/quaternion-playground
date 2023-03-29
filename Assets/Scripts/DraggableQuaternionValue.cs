@@ -137,13 +137,13 @@ public class DraggableQuaternionValue : MonoBehaviour, IDraggable
                         displayText = $" {Sign(q0, false)} {Format(q0)} ";
                         break;
                     case QuaternionValue.q1:
-                        displayText = $"{Sign(q1, m_GlobalControl.State.Sphere == Sphere.Three)} {Format(q1)}i ";
+                        displayText = $"{Sign(q1, m_GlobalControl.State.Sphere == Sphere.Three)} {Format(q1)}{(m_GlobalControl.State.Sphere != Sphere.Three ? ' ' : 'i')} ";
                         break;
                     case QuaternionValue.q2:
-                        displayText = $"{Sign(q2, true)} {Format(q2)}{(m_GlobalControl.State.Sphere == Sphere.One ? ' ' : 'j')} ";
+                        displayText = $"{Sign(q2, true)} {Format(q2)}{(m_GlobalControl.State.Sphere != Sphere.Three ? 'i' : 'j')} ";
                         break;
                     case QuaternionValue.q3:
-                        displayText = $"{Sign(q3, true)} {Format(q3)}{(m_GlobalControl.State.Sphere == Sphere.Two ? ' ' : 'k')} ";
+                        displayText = $"{Sign(q3, true)} {Format(q3)}{(m_GlobalControl.State.Sphere != Sphere.Three ? 'j' : 'k')} ";
                         break;
                 }
                 break;

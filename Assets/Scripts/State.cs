@@ -7,14 +7,14 @@ public class State
     public Notation Notation = Notation.Complex;
     public Projection Projection = Projection.Overlapped;
 
-    public Vector2 OneSpherePosition = new Vector2(0, 1);
-    public Vector3 TwoSpherePosition = new Vector3(0, 0, 1);
+    public Vector2 OneSpherePosition = new Vector2(1, 0);
+    public Vector3 TwoSpherePosition = new Vector3(1, 0, 0);
     public Vector4 ThreeSpherePosition = new Vector4(0, 0, 0, 1);
 
     // Private Members
     private Vector2 TwoSphereCachedVectorXY = new Vector2(1, 0);
-    private Vector2 TwoSphereCachedVectorXZ = new Vector2(0, 1);
-    private Vector2 TwoSphereCachedVectorYZ = new Vector2(0, 1);
+    private Vector2 TwoSphereCachedVectorXZ = new Vector2(1, 0);
+    private Vector2 TwoSphereCachedVectorYZ = new Vector2(1, 0);
 
 
     // Public Methods
@@ -114,6 +114,22 @@ public class State
                         TwoSphereCachedVectorYZ = new Vector2(TwoSpherePosition.y, TwoSpherePosition.z);
                         break;
                 }
+
+                if (TwoSphereCachedVectorXY.magnitude < 0.01f)
+                {
+                    TwoSphereCachedVectorXY = new Vector2(1, 0);
+                }
+
+                if (TwoSphereCachedVectorXZ.magnitude < 0.01f)
+                {
+                    TwoSphereCachedVectorXZ = new Vector2(0, 1);
+                }
+
+                if (TwoSphereCachedVectorYZ.magnitude < 0.01f)
+                {
+                    TwoSphereCachedVectorYZ = new Vector2(0, 1);
+                }
+
                 break;
             case Sphere.Three:
                 break;

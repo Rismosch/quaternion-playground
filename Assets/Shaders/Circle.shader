@@ -52,7 +52,7 @@ Shader "Unlit/Circle"
                 float2 coord = (i.uv - 0.5) * 2;
 
                 float diff = abs(0.9 - length(coord));
-                float isOnCircle = clamp(1 - diff * 50, 0, 1);
+                float isOnCircle = clamp(1 - diff * 75, 0, 1);
 
                 return fixed4(_Color.xyz, isOnCircle);
             }

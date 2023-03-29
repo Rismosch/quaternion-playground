@@ -11,12 +11,30 @@ public class PointMover : MonoBehaviour
     [SerializeField] private Color m_NorthColor;
     [SerializeField] private Color m_SouthColor;
 
+    [SerializeField] private Sphere m_Sphere;
+
     // Unity Methods
     private void LateUpdate()
     {
-        this.transform.position = 0.9f * 0.5f * m_GlobalControl.State.TwoSpherePosition;
+        var position = Vector3.zero;
+        var q0 = 0f;
+        switch(m_Sphere)
+        {
+            case Sphere.One:
+                position = m_GlobalControl.State.OneSpherePosition;
+                q0 = m_GlobalControl.State.OneSpherePosition.y;
+                break;
+            case Sphere.Two:
+                position = m_GlobalControl.State.TwoSpherePosition;
+                q0 = m_GlobalControl.State.TwoSpherePosition.y;
+                break;
+            case Sphere.Three:
+                break;
+        }
 
-        if (m_GlobalControl.State.TwoSpherePosition.z < 0)
+        this.transform.position = 0.9f * 0.5f * position;
+
+        if (q0 < 0)
         {
             m_PointMaterial.SetColor("_Color", m_SouthColor);
         }

@@ -8,20 +8,19 @@ public class AxisRotator : MonoBehaviour
     [SerializeField] private Transform m_Camera;
 
     [SerializeField] private Vector3 m_Right;
-    [SerializeField] private bool m_IsY;
     
     // Unity Event Methods
     private void LateUpdate()
     {
-        var cameraUp = m_Camera.rotation * Vector3.up;
-        var forward = Vector3.Cross(cameraUp, m_Right);
-        var upwards = Vector3.Cross(forward, m_Right);
+        var cameraForward = m_Camera.rotation * Vector3.forward;
 
-        this.transform.rotation = Quaternion.LookRotation(forward, upwards);
+        var upward = Vector3.Cross(cameraForward, m_Right);
+        var forward = Vector3.Cross(upward, m_Right);
 
-        if (m_IsY)
+        if (upward.sqrMagnitude > 1e-7 && forward.sqrMagnitude > 1e-7)
         {
-            this.transform.rotation = Quaternion.AngleAxis((0.5f * Mathf.PI) * Mathf.Rad2Deg, Vector3.up) * this.transform.rotation;
+            var rotation = Quaternion.LookRotation(forward, upward);
+            this.transform.rotation = rotation;
         }
     }
 }

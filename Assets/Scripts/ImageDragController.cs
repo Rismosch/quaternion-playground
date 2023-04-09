@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CameraRigController : MonoBehaviour, IDraggable
+public class ImageDragController : MonoBehaviour, IDraggable
 {
     // Unity Members
     [SerializeField] private GlobalControl m_GlobalControl;
@@ -21,11 +21,15 @@ public class CameraRigController : MonoBehaviour, IDraggable
     [SerializeField] private RenderTexture m_TwoSphereRenderTexture;
     [SerializeField] private RenderTexture m_ThreeSphereRenderTexture;
 
+    [Header("DEBUG")]
+    [SerializeField] private Vector3 m_Test;
+
     // Properties
     public bool IsPointerOver { get; set; }
 
     // Members
-    private bool m_IsDragging;
+    private bool m_IsDraggingRight;
+    private bool m_IsDraggingLeft;
     private Vector3 m_PreviousMousePosition;
 
     // Public Methods
@@ -33,7 +37,7 @@ public class CameraRigController : MonoBehaviour, IDraggable
     {
         CameraRig cameraRig = null;
 
-        // Display
+        // Display CameraRig and Text
         switch(m_GlobalControl.State.Sphere)
         {
             case Sphere.One:
@@ -62,19 +66,60 @@ public class CameraRigController : MonoBehaviour, IDraggable
                 break;
         }
 
-        // Drag Logic
-        if (IsPointerOver && Input.GetMouseButtonDown(1))
+        // Drag Start Logic
+        if (!m_IsDraggingRight && IsPointerOver && Input.GetMouseButtonDown(0))
         {
-            m_IsDragging = true;
+            m_IsDraggingLeft = true;
             m_PreviousMousePosition = Input.mousePosition;
         }
 
-        if (Input.GetMouseButtonUp(1))
+        if (!m_IsDraggingLeft && IsPointerOver && Input.GetMouseButtonDown(1))
         {
-            m_IsDragging = false;
+            m_IsDraggingRight = true;
+            m_PreviousMousePosition = Input.mousePosition;
         }
 
-        if (m_IsDragging && cameraRig.CanRotate)
+        // Drag End Logic
+        if (Input.GetMouseButtonUp(0))
+        {
+            m_IsDraggingLeft = false;
+        }
+        
+        if (Input.GetMouseButtonUp(1))
+        {
+            m_IsDraggingRight = false;
+        }
+
+        // Drag Point Logic
+        if (m_IsDraggingLeft)
+        {
+            var rectTransform = (RectTransform)this.transform;
+            var rect = rectTransform.rect;
+            var position = Input.mousePosition - rectTransform.position;
+
+            // Orthographic camera has size of 0.6f. The image has a width of 1f, so in the unit
+            // of camerasize, the camera has a size of 0.5f. To undo this ratio, we multiply by
+            // (0.6f / 0.5f).
+            // 
+            // Since every UI shader I wrote has a padding of 0.9f, we need to reverse this aswell.
+            // We do this by multiplying the inverse of 0.9f: (1f / 0.9f).
+            // 
+            // These two numbers convert local screen space coordinates to local normalized coordinates,
+            // where the circle has a radius of 0.5f units. Because we want this radius to be 1, we
+            // finally multiply by 2.
+            // 
+            // The result should be exactly 2.66...
+            const float magic = (0.6f / 0.5f) * (1f / 0.9f) * 2;
+            var normalizedPosition = new Vector3(
+                magic * position.x / rect.width,
+                magic * position.y / rect.height,
+                0
+            );
+            m_Test = normalizedPosition;
+        }
+
+        // Drag CameraRig Logic
+        if (m_IsDraggingRight && cameraRig.CanRotate)
         {
             var delta = Input.mousePosition - m_PreviousMousePosition;
             delta *= 0.03f;

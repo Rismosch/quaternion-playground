@@ -1,4 +1,4 @@
-Shader "Unlit/Circle"
+Shader "Unlit/Line"
 {
     Properties
     {

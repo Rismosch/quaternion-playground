@@ -13,7 +13,7 @@ public class PointMover : MonoBehaviour
 
     [SerializeField] private Sphere m_Sphere;
 
-    // Unity Methods
+    // Unity Event Methods
     private void LateUpdate()
     {
         var position = Vector3.zero;

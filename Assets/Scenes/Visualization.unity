@@ -1348,7 +1348,7 @@ MonoBehaviour:
   m_LineMaterialZ: {fileID: 2100000, guid: 254b5386f0939ac4e8d83cd3c18aec7d, type: 2}
   m_LineMaterialXZ: {fileID: 2100000, guid: fc08619e1d532f24c88aa16417e93a8b, type: 2}
   m_AxisRotatorProjectionY: {fileID: 939013791}
-  m_AxisRotatorRadius: {fileID: 0}
+  m_AxisRotatorRadius: {fileID: 546810434}
   m_Debug: 0
 --- !u!1 &284949770
 GameObject:
@@ -2762,7 +2762,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: fc08619e1d532f24c88aa16417e93a8b, type: 2}
+  m_Material: {fileID: 2100000, guid: b2af43dbe18036446b582b4437203f50, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}

@@ -8,6 +8,13 @@ public class AxisRotator : MonoBehaviour
     [SerializeField] private Transform m_Camera;
 
     [SerializeField] private Vector3 m_Right;
+
+    // Properties
+    public Vector3 Right
+    {
+        get => m_Right;
+        set => m_Right = value;
+    }
     
     // Unity Event Methods
     private void LateUpdate()

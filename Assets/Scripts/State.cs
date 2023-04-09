@@ -90,8 +90,7 @@ public class State
                         TwoSpherePosition.y = Clamp(scaledYZ.x);
                         TwoSpherePosition.z = Clamp(scaledYZ.y);
 
-                        TwoSphereCachedVectorXY = new Vector2(TwoSpherePosition.x, TwoSpherePosition.y);
-                        TwoSphereCachedVectorXZ = new Vector2(TwoSpherePosition.x, TwoSpherePosition.z);
+                        RecalculateTwoSphereCachedVectors(true, true, false);
                         break;
                     case QuaternionValue.q2:
                         TwoSpherePosition.y = Clamp(TwoSpherePosition.y + delta);
@@ -100,8 +99,7 @@ public class State
                         TwoSpherePosition.x = Clamp(scaledXZ.x);
                         TwoSpherePosition.z = Clamp(scaledXZ.y);
 
-                        TwoSphereCachedVectorXY = new Vector2(TwoSpherePosition.x, TwoSpherePosition.y);
-                        TwoSphereCachedVectorYZ = new Vector2(TwoSpherePosition.y, TwoSpherePosition.z);
+                        RecalculateTwoSphereCachedVectors(true, false, true);
                         break;
                     case QuaternionValue.q3:
                         TwoSpherePosition.z = Clamp(TwoSpherePosition.z + delta);
@@ -109,9 +107,8 @@ public class State
                         var scaledXY = radiusXY * TwoSphereCachedVectorXY.normalized;
                         TwoSpherePosition.x = Clamp(scaledXY.x);
                         TwoSpherePosition.y = Clamp(scaledXY.y);
-                        
-                        TwoSphereCachedVectorXZ = new Vector2(TwoSpherePosition.x, TwoSpherePosition.z);
-                        TwoSphereCachedVectorYZ = new Vector2(TwoSpherePosition.y, TwoSpherePosition.z);
+
+                        RecalculateTwoSphereCachedVectors(false, true, true);
                         break;
                 }
 
@@ -136,6 +133,24 @@ public class State
         }
     }
 
+    public void RecalculateTwoSphereCachedVectors(bool xy, bool xz, bool yz)
+    {
+        if (xy)
+        {
+            TwoSphereCachedVectorXY = new Vector2(TwoSpherePosition.x, TwoSpherePosition.y);
+        }
+
+        if (xz)
+        {
+            TwoSphereCachedVectorXZ = new Vector2(TwoSpherePosition.x, TwoSpherePosition.z);
+        }
+
+        if (yz)
+        {
+            TwoSphereCachedVectorYZ = new Vector2(TwoSpherePosition.y, TwoSpherePosition.z);
+        }
+    }
+
     public override string ToString()
     {
         return $"{{{nameof(Sphere)}: {Sphere}, {nameof(Notation)}: {Notation}, {nameof(Projection)}, {Projection}}}";
@@ -144,10 +159,10 @@ public class State
     // Private Methods
     private float Clamp(float value)
     {
-        if (value < 0.01f && value > -0.01f)
-        {
-            return 0;
-        }
+        // if (value < 0.01f && value > -0.01f)
+        // {
+        //     return 0;
+        // }
 
         return Mathf.Clamp(value, -1f, 1f);
     }

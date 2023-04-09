@@ -74,10 +74,15 @@ public class PointMover : MonoBehaviour
                 var position = new Vector3(positionXY.x, positionXY.y, positionZ);
                 var rotatedPosition = this.transform.rotation * position;
                 m_GlobalControl.State.TwoSpherePosition = rotatedPosition;
+
+                m_GlobalControl.State.RecalculateTwoSphereCachedVectors(true, true, true);
                 break;
             }
             case Sphere.Three:
+            {
+                
                 break;
+            }
         }
     }
 }

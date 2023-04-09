@@ -1101,7 +1101,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &280563555
 Transform:
   m_ObjectHideFlags: 0
@@ -1337,6 +1337,7 @@ MonoBehaviour:
   m_NorthColor: {r: 0.49411768, g: 0.14509805, b: 0.3254902, a: 0}
   m_SouthColor: {r: 0.5137255, g: 0.46274513, b: 0.6117647, a: 0}
   m_Sphere: 1
+  m_Debug: {x: 0, y: 0, z: 0}
 --- !u!1 &297495152
 GameObject:
   m_ObjectHideFlags: 0
@@ -3843,6 +3844,7 @@ MonoBehaviour:
   m_NorthColor: {r: 0.49411768, g: 0.14509805, b: 0.3254902, a: 0}
   m_SouthColor: {r: 0.5137255, g: 0.46274513, b: 0.6117647, a: 0}
   m_Sphere: 0
+  m_Debug: {x: 0, y: 0, z: 0}
 --- !u!114 &847748851
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6609,7 +6611,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1274914728
 Transform:
   m_ObjectHideFlags: 0
@@ -7037,7 +7039,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1437394685
 Transform:
   m_ObjectHideFlags: 0
@@ -7680,6 +7682,9 @@ MonoBehaviour:
   m_OneSphereRenderTexture: {fileID: 8400000, guid: 9110e4c2627b445448c716430badb39e, type: 2}
   m_TwoSphereRenderTexture: {fileID: 8400000, guid: 74aadd871babbe143b11bc81a574e859, type: 2}
   m_ThreeSphereRenderTexture: {fileID: 8400000, guid: 7e3a394857dbfec41b7c961ec4027c22, type: 2}
+  m_OneSpherePointMover: {fileID: 0}
+  m_TwoSpherePointMover: {fileID: 0}
+  m_ThreeSpherePointMover: {fileID: 0}
 --- !u!114 &1633469447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8170,6 +8175,9 @@ MonoBehaviour:
   m_OneSphereRenderTexture: {fileID: 8400000, guid: e25f2a5ab4fc8f14b8989f82d768d950, type: 2}
   m_TwoSphereRenderTexture: {fileID: 8400000, guid: bde7ecd3c6d897343beaed20d7dff563, type: 2}
   m_ThreeSphereRenderTexture: {fileID: 8400000, guid: 76743326beec9de4eb2941ad45b69000, type: 2}
+  m_OneSpherePointMover: {fileID: 847748850}
+  m_TwoSpherePointMover: {fileID: 287129655}
+  m_ThreeSpherePointMover: {fileID: 0}
 --- !u!1 &1667142905
 GameObject:
   m_ObjectHideFlags: 0
@@ -10412,7 +10420,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1948896679
 Transform:
   m_ObjectHideFlags: 0

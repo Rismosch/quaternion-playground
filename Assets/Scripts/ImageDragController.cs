@@ -21,8 +21,9 @@ public class ImageDragController : MonoBehaviour, IDraggable
     [SerializeField] private RenderTexture m_TwoSphereRenderTexture;
     [SerializeField] private RenderTexture m_ThreeSphereRenderTexture;
 
-    [Header("DEBUG")]
-    [SerializeField] private Vector3 m_Test;
+    [SerializeField] private PointMover m_OneSpherePointMover;
+    [SerializeField] private PointMover m_TwoSpherePointMover;
+    [SerializeField] private PointMover m_ThreeSpherePointMover;
 
     // Properties
     public bool IsPointerOver { get; set; }
@@ -110,12 +111,23 @@ public class ImageDragController : MonoBehaviour, IDraggable
             // 
             // The result should be exactly 2.66...
             const float magic = (0.6f / 0.5f) * (1f / 0.9f) * 2;
-            var normalizedPosition = new Vector3(
+            var normalizedPosition = new Vector2(
                 magic * position.x / rect.width,
-                magic * position.y / rect.height,
-                0
+                magic * position.y / rect.height
             );
-            m_Test = normalizedPosition;
+
+            switch(m_GlobalControl.State.Sphere)
+            {
+                case Sphere.One:
+                    m_OneSpherePointMover?.Drag(normalizedPosition);
+                    break;
+                case Sphere.Two:
+                    m_TwoSpherePointMover?.Drag(normalizedPosition);
+                    break;
+                case Sphere.Three:
+                    m_ThreeSpherePointMover?.Drag(normalizedPosition);
+                    break;
+            }
         }
 
         // Drag CameraRig Logic

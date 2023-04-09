@@ -43,4 +43,41 @@ public class PointMover : MonoBehaviour
             m_PointMaterial.SetColor("_Color", m_NorthColor);
         }
     }
+
+    // Public Methods
+    public void Drag(Vector2 normalizedImagePosition)
+    {
+        switch(m_Sphere)
+        {
+            case Sphere.One:
+            {
+                m_GlobalControl.State.OneSpherePosition = normalizedImagePosition.normalized;
+                break;
+            }
+            case Sphere.Two:
+            {
+                Vector2 positionXY;
+
+                var magnitudeSquared = Vector2.Dot(normalizedImagePosition, normalizedImagePosition);
+                if (magnitudeSquared > 1f)
+                {
+                    positionXY = normalizedImagePosition / Mathf.Sqrt(magnitudeSquared);
+                    magnitudeSquared = 1;
+                }
+                else
+                {
+                    positionXY = normalizedImagePosition;
+                }
+
+                var positionZ = -1f * Mathf.Sqrt(1 - magnitudeSquared);
+
+                var position = new Vector3(positionXY.x, positionXY.y, positionZ);
+                var rotatedPosition = this.transform.rotation * position;
+                m_GlobalControl.State.TwoSpherePosition = rotatedPosition;
+                break;
+            }
+            case Sphere.Three:
+                break;
+        }
+    }
 }

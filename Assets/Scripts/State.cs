@@ -16,6 +16,11 @@ public class State
     private Vector2 TwoSphereCachedVectorXZ = new Vector2(1, 0);
     private Vector2 TwoSphereCachedVectorYZ = new Vector2(1, 0);
 
+    private Vector3 ThreeSphereCachedVectorWXY = new Vector3(1, 0, 0);
+    private Vector3 ThreeSphereCachedVectorWXZ = new Vector3(1, 0, 0);
+    private Vector3 ThreeSphereCachedVectorWYZ = new Vector3(1, 0, 0);
+    private Vector3 ThreeSphereCachedVectorXYZ = new Vector3(1, 0, 0);
+
 
     // Public Methods
     public void Reset(QuaternionValue quaternionValue)
@@ -111,24 +116,51 @@ public class State
                         RecalculateTwoSphereCachedVectors(false, true, true);
                         break;
                 }
-
-                if (TwoSphereCachedVectorXY.magnitude < 0.01f)
-                {
-                    TwoSphereCachedVectorXY = new Vector2(1, 0);
-                }
-
-                if (TwoSphereCachedVectorXZ.magnitude < 0.01f)
-                {
-                    TwoSphereCachedVectorXZ = new Vector2(0, 1);
-                }
-
-                if (TwoSphereCachedVectorYZ.magnitude < 0.01f)
-                {
-                    TwoSphereCachedVectorYZ = new Vector2(0, 1);
-                }
-
                 break;
             case Sphere.Three:
+                switch(quaternionValue)
+                {
+                    case QuaternionValue.q0:
+                        ThreeSpherePosition.w = Clamp(ThreeSpherePosition.w + delta);
+                        var radiusXYZ = Mathf.Sqrt(1 - ThreeSpherePosition.w * ThreeSpherePosition.w);
+                        var scaledXYZ = radiusXYZ * ThreeSphereCachedVectorXYZ.normalized;
+                        ThreeSpherePosition.x = Clamp(scaledXYZ.x);
+                        ThreeSpherePosition.y = Clamp(scaledXYZ.y);
+                        ThreeSpherePosition.z = Clamp(scaledXYZ.z);
+
+                        RecalculateThreeSphereCachedVectors(true, true, true, false);
+                        break;
+                    case QuaternionValue.q1:
+                        ThreeSpherePosition.x = Clamp(ThreeSpherePosition.x + delta);
+                        var radiusWYZ = Mathf.Sqrt(1 - ThreeSpherePosition.x * ThreeSpherePosition.x);
+                        var scaledWYZ = radiusWYZ * ThreeSphereCachedVectorWYZ.normalized;
+                        ThreeSpherePosition.w = Clamp(scaledWYZ.x);
+                        ThreeSpherePosition.y = Clamp(scaledWYZ.y);
+                        ThreeSpherePosition.z = Clamp(scaledWYZ.z);
+
+                        RecalculateThreeSphereCachedVectors(true, true, false, true);
+                        break;
+                    case QuaternionValue.q2:
+                        ThreeSpherePosition.y = Clamp(ThreeSpherePosition.y + delta);
+                        var radiusWXZ = Mathf.Sqrt(1 - ThreeSpherePosition.y * ThreeSpherePosition.y);
+                        var scaledWXZ = radiusWXZ * ThreeSphereCachedVectorWXZ.normalized;
+                        ThreeSpherePosition.w = Clamp(scaledWXZ.x);
+                        ThreeSpherePosition.x = Clamp(scaledWXZ.y);
+                        ThreeSpherePosition.z = Clamp(scaledWXZ.z);
+
+                        RecalculateThreeSphereCachedVectors(true, false, true, true);
+                        break;
+                    case QuaternionValue.q3:
+                        ThreeSpherePosition.z = Clamp(ThreeSpherePosition.z + delta);
+                        var radiusWXY = Mathf.Sqrt(1 - ThreeSpherePosition.z * ThreeSpherePosition.z);
+                        var scaledWXY = radiusWXY * ThreeSphereCachedVectorWXY.normalized;
+                        ThreeSpherePosition.w = Clamp(scaledWXY.x);
+                        ThreeSpherePosition.x = Clamp(scaledWXY.y);
+                        ThreeSpherePosition.y = Clamp(scaledWXY.z);
+
+                        RecalculateThreeSphereCachedVectors(false, true, true, true);
+                        break;
+                }
                 break;
         }
     }
@@ -149,6 +181,64 @@ public class State
         {
             TwoSphereCachedVectorYZ = new Vector2(TwoSpherePosition.y, TwoSpherePosition.z);
         }
+
+        if (TwoSphereCachedVectorXY.magnitude < 0.01f)
+        {
+            TwoSphereCachedVectorXY = new Vector2(1, 0);
+        }
+
+        if (TwoSphereCachedVectorXZ.magnitude < 0.01f)
+        {
+            TwoSphereCachedVectorXZ = new Vector2(0, 1);
+        }
+
+        if (TwoSphereCachedVectorYZ.magnitude < 0.01f)
+        {
+            TwoSphereCachedVectorYZ = new Vector2(0, 1);
+        }
+    }
+
+    public void RecalculateThreeSphereCachedVectors(bool wxy, bool wxz, bool wyz, bool xyz)
+    {
+        if (wxy)
+        {
+            ThreeSphereCachedVectorWXY = new Vector3(ThreeSpherePosition.w, ThreeSpherePosition.x, ThreeSpherePosition.y);
+        }
+        
+        if (wxz)
+        {
+            ThreeSphereCachedVectorWXZ = new Vector3(ThreeSpherePosition.w, ThreeSpherePosition.x, ThreeSpherePosition.z);
+        }
+        
+        if (wyz)
+        {
+            ThreeSphereCachedVectorWYZ = new Vector3(ThreeSpherePosition.w, ThreeSpherePosition.y, ThreeSpherePosition.z);
+        }
+        
+        if (xyz)
+        {
+            ThreeSphereCachedVectorXYZ = new Vector3(ThreeSpherePosition.x, ThreeSpherePosition.y, ThreeSpherePosition.z);
+        }
+
+        if (ThreeSphereCachedVectorWXY.magnitude < 0.01f)
+        {
+            ThreeSphereCachedVectorWXY = new Vector3(1, 0, 0);
+        }
+
+        if (ThreeSphereCachedVectorWXZ.magnitude < 0.01f)
+        {
+            ThreeSphereCachedVectorWXZ = new Vector3(1, 0, 0);
+        }
+
+        if (ThreeSphereCachedVectorWYZ.magnitude < 0.01f)
+        {
+            ThreeSphereCachedVectorWYZ = new Vector3(1, 0, 0);
+        }
+
+        if (ThreeSphereCachedVectorXYZ.magnitude < 0.01f)
+        {
+            ThreeSphereCachedVectorXYZ = new Vector3(1, 0, 0);
+        }
     }
 
     public override string ToString()
@@ -159,11 +249,6 @@ public class State
     // Private Methods
     private float Clamp(float value)
     {
-        // if (value < 0.01f && value > -0.01f)
-        // {
-        //     return 0;
-        // }
-
         return Mathf.Clamp(value, -1f, 1f);
     }
 }

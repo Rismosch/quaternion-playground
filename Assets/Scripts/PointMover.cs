@@ -13,6 +13,8 @@ public class PointMover : MonoBehaviour
 
     [SerializeField] private Sphere m_Sphere;
 
+    [SerializeField] private float m_Debug;
+
     // Unity Event Methods
     private void LateUpdate()
     {
@@ -29,10 +31,18 @@ public class PointMover : MonoBehaviour
                 q0 = m_GlobalControl.State.TwoSpherePosition.y;
                 break;
             case Sphere.Three:
+                position = new Vector3(
+                    m_GlobalControl.State.ThreeSpherePosition.x,
+                    m_GlobalControl.State.ThreeSpherePosition.y,
+                    m_GlobalControl.State.ThreeSpherePosition.z
+                );
+                q0 = m_GlobalControl.State.ThreeSpherePosition.w;
                 break;
         }
 
         this.transform.position = 0.9f * 0.5f * position;
+
+        m_Debug = q0;
 
         if (q0 < 0)
         {

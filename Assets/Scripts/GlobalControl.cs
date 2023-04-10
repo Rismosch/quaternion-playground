@@ -9,7 +9,6 @@ public class GlobalControl : MonoBehaviour
     // Unity Members
     [SerializeField] private TMPro.TMP_Dropdown sphereDropdown;
     [SerializeField] private TMPro.TMP_Dropdown notationDropdown;
-    [SerializeField] private TMPro.TMP_Dropdown projectionDropdown;
     [SerializeField] private GraphicRaycaster m_GraphicRaycaster;
     [SerializeField] private List<GameObject> m_DraggableGameObjects;
 
@@ -118,16 +117,6 @@ public class GlobalControl : MonoBehaviour
                 break;
             case "Angle Axis DEG":
                 State.Notation = Notation.AngleAxisDeg;
-                break;
-        }
-
-        switch(projectionDropdown.captionText.text)
-        {
-            case "Overlapped":
-                State.Projection = Projection.Overlapped;
-                break;
-            case "Seperated":
-                State.Projection = Projection.Seperated;
                 break;
         }
 

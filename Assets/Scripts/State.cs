@@ -5,7 +5,6 @@ public class State
     // Public Members
     public Sphere Sphere = Sphere.One;
     public Notation Notation = Notation.Complex;
-    public Projection Projection = Projection.Overlapped;
 
     public Vector2 OneSpherePosition = new Vector2(1, 0);
     public Vector3 TwoSpherePosition = new Vector3(1, 0, 0);
@@ -243,7 +242,7 @@ public class State
 
     public override string ToString()
     {
-        return $"{{{nameof(Sphere)}: {Sphere}, {nameof(Notation)}: {Notation}, {nameof(Projection)}, {Projection}}}";
+        return $"{{{nameof(Sphere)}: {Sphere}, {nameof(Notation)}: {Notation}}}";
     }
 
     // Private Methods

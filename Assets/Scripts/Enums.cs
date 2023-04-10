@@ -12,11 +12,6 @@ public enum Notation {
     AngleAxisDeg,
 }
 
-public enum Projection {
-    Overlapped,
-    Seperated
-}
-
 public enum QuaternionValue {
     q0,
     q1,

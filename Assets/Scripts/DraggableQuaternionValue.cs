@@ -212,34 +212,13 @@ public class DraggableQuaternionValue : MonoBehaviour, IDraggable
                         displayText = $"\u03b8={Sign(q0, false)}{angleToDisplay}";
                         break;
                     case QuaternionValue.q1:
-                        if (q0 == 0)
-                        {
-                            displayText = $"x= ???";
-                        }
-                        else
-                        {
-                            displayText = $"x={Sign(q1, false)}{Format(q1)}";
-                        }
+                        displayText = $"x={Sign(q1, false)}{Format(q1)}";
                         break;
                     case QuaternionValue.q2:
-                        if (q0 == 0)
-                        {
-                            displayText = $"y= ???";
-                        }
-                        else
-                        {
-                            displayText = $"y={Sign(q2, false)}{Format(q2)}";
-                        }
+                        displayText = $"y={Sign(q2, false)}{Format(q2)}";
                         break;
                     case QuaternionValue.q3:
-                        if (q0 == 0)
-                        {
-                            displayText = $"z= ???";
-                        }
-                        else
-                        {
-                            displayText = $"z={Sign(q3, false)}{Format(q3)}";
-                        }
+                        displayText = $"z={Sign(q3, false)}{Format(q3)}";
                         break;
                 }
                 break;

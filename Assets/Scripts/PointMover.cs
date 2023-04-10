@@ -120,7 +120,7 @@ public class PointMover : MonoBehaviour
                     rotatedPositionXYZ.z,
                     w
                 );
-                m_GlobalControl.State.RecalculateThreeSphereCachedVectors(true, true, true, true);
+                m_GlobalControl.State.RecalculateThreeSphereCachedVectors(true, true, true, true, true, true, true);
                 break;
             }
         }

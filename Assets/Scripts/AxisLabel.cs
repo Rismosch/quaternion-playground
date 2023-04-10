@@ -23,6 +23,8 @@ public class AxisLabel : MonoBehaviour
                 m_TmpText.text = m_QuaternionText;
                 break;
             case Notation.Vector:
+            case Notation.AngleAxisRad:
+            case Notation.AngleAxisDeg:
                 m_TmpText.text = m_VectorText;
                 break;
         }

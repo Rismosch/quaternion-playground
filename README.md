@@ -1,2 +1,2 @@
-# Visualizing-Quaternions
-Unity demo project to visualize quaternions, inspired by the book of the same name by Andrew J. Hanson.
+# Quaternion Visualizer
+Unity demo project to visualize quaternions, inspired by the book "Visualizing Quaternions" by Andrew J. Hanson.

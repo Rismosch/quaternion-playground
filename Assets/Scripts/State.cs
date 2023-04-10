@@ -6,19 +6,81 @@ public class State
     public Sphere Sphere = Sphere.One;
     public Notation Notation = Notation.Complex;
 
-    public Vector2 OneSpherePosition = new Vector2(1, 0);
-    public Vector3 TwoSpherePosition = new Vector3(1, 0, 0);
-    public Vector4 ThreeSpherePosition = new Vector4(0, 0, 0, 1);
+    // Properties
+    public Vector2 OneSpherePosition { get; set; }
+
+    public Vector3 TwoSpherePosition { get; set; }
+
+    public Vector4 ThreeSpherePosition
+    {
+        get => m_ThreeSpherePosition;
+        set
+        {
+            m_ThreeSpherePosition = value;
+
+            var theta = 2 * Mathf.Acos(value.w);
+            if (theta == 0)
+            {
+                m_ThreeSphereAngleAxis = new Vector4(float.NaN, float.NaN, float.NaN, 0);
+            }
+            else
+            {
+                var x = value.x / Mathf.Sin(0.5f * theta);
+                var y = value.y / Mathf.Sin(0.5f * theta);
+                var z = value.z / Mathf.Sin(0.5f * theta);
+
+                m_ThreeSphereAngleAxis = new Vector4(x, y, z, theta);
+            }
+        }
+    }
+
+    public Vector4 ThreeSphereAngleAxis
+    {
+        get => m_ThreeSphereAngleAxis;
+        set
+        {
+            var magnitude = Mathf.Sqrt(value.x * value.x + value.y * value.y + value.z * value.z);
+            var xN = value.x / magnitude;
+            var yN = value.y / magnitude;
+            var zN = value.z / magnitude;
+            var theta = value.w;
+
+            while(theta > 2 * Mathf.PI)
+            {
+                theta -= 2 * Mathf.PI;
+            }
+
+            while(theta < 0)
+            {
+                theta += 2 * Mathf.PI;
+            }
+
+            var cosTheta = Mathf.Cos(0.5f * theta);
+            var sinTheta = Mathf.Sin(0.5f * theta);
+            var w = cosTheta;
+            var x = xN * sinTheta;
+            var y = yN * sinTheta;
+            var z = zN * sinTheta;
+
+            m_ThreeSphereAngleAxis = new Vector4(xN, yN, zN, theta);
+            m_ThreeSpherePosition = new Vector4(x, y, z, w);
+        }
+    }
 
     // Private Members
-    private Vector2 TwoSphereCachedVectorXY = new Vector2(1, 0);
-    private Vector2 TwoSphereCachedVectorXZ = new Vector2(1, 0);
-    private Vector2 TwoSphereCachedVectorYZ = new Vector2(1, 0);
+    private Vector2 m_OneSpherePosition = new Vector2(1, 0);
+    private Vector3 m_TwoSpherePosition = new Vector3(1, 0, 0);
+    private Vector4 m_ThreeSpherePosition = new Vector4(0, 0, 0, 1);
+    private Vector4 m_ThreeSphereAngleAxis = new Vector4(0, float.NaN, float.NaN, float.NaN);
 
-    private Vector3 ThreeSphereCachedVectorWXY = new Vector3(1, 0, 0);
-    private Vector3 ThreeSphereCachedVectorWXZ = new Vector3(1, 0, 0);
-    private Vector3 ThreeSphereCachedVectorWYZ = new Vector3(1, 0, 0);
-    private Vector3 ThreeSphereCachedVectorXYZ = new Vector3(1, 0, 0);
+    private Vector2 m_TwoSphereCachedVectorXY = new Vector2(1, 0);
+    private Vector2 m_TwoSphereCachedVectorXZ = new Vector2(1, 0);
+    private Vector2 m_TwoSphereCachedVectorYZ = new Vector2(1, 0);
+
+    private Vector3 m_ThreeSphereCachedVectorWXY = new Vector3(1, 0, 0);
+    private Vector3 m_ThreeSphereCachedVectorWXZ = new Vector3(1, 0, 0);
+    private Vector3 m_ThreeSphereCachedVectorWYZ = new Vector3(1, 0, 0);
+    private Vector3 m_ThreeSphereCachedVectorXYZ = new Vector3(1, 0, 0);
 
 
     // Public Methods
@@ -75,12 +137,12 @@ public class State
                 switch(quaternionValue)
                 {
                     case QuaternionValue.q1:
-                        OneSpherePosition.x = Clamp(OneSpherePosition.x + delta);
-                        OneSpherePosition.y = Mathf.Sqrt(1 - OneSpherePosition.x * OneSpherePosition.x);
+                        m_OneSpherePosition.x = Clamp(OneSpherePosition.x + delta);
+                        m_OneSpherePosition.y = Mathf.Sqrt(1 - OneSpherePosition.x * OneSpherePosition.x);
                         break;
                     case QuaternionValue.q2:
-                        OneSpherePosition.y = Clamp(OneSpherePosition.y + delta);
-                        OneSpherePosition.x = Mathf.Sqrt(1 - OneSpherePosition.y * OneSpherePosition.y);
+                        m_OneSpherePosition.y = Clamp(OneSpherePosition.y + delta);
+                        m_OneSpherePosition.x = Mathf.Sqrt(1 - OneSpherePosition.y * OneSpherePosition.y);
                         break;
                 }
                 break;
@@ -88,29 +150,29 @@ public class State
                 switch(quaternionValue)
                 {
                     case QuaternionValue.q1:
-                        TwoSpherePosition.x = Clamp(TwoSpherePosition.x + delta);
+                        m_TwoSpherePosition.x = Clamp(TwoSpherePosition.x + delta);
                         var radiusYZ = Mathf.Sqrt(1 - TwoSpherePosition.x * TwoSpherePosition.x);
-                        var scaledYZ = radiusYZ * TwoSphereCachedVectorYZ.normalized;
-                        TwoSpherePosition.y = Clamp(scaledYZ.x);
-                        TwoSpherePosition.z = Clamp(scaledYZ.y);
+                        var scaledYZ = radiusYZ * m_TwoSphereCachedVectorYZ.normalized;
+                        m_TwoSpherePosition.y = Clamp(scaledYZ.x);
+                        m_TwoSpherePosition.z = Clamp(scaledYZ.y);
 
                         RecalculateTwoSphereCachedVectors(true, true, false);
                         break;
                     case QuaternionValue.q2:
-                        TwoSpherePosition.y = Clamp(TwoSpherePosition.y + delta);
+                        m_TwoSpherePosition.y = Clamp(TwoSpherePosition.y + delta);
                         var radiusXZ = Mathf.Sqrt(1 - TwoSpherePosition.y * TwoSpherePosition.y);
-                        var scaledXZ = radiusXZ * TwoSphereCachedVectorXZ.normalized;
-                        TwoSpherePosition.x = Clamp(scaledXZ.x);
-                        TwoSpherePosition.z = Clamp(scaledXZ.y);
+                        var scaledXZ = radiusXZ * m_TwoSphereCachedVectorXZ.normalized;
+                        m_TwoSpherePosition.x = Clamp(scaledXZ.x);
+                        m_TwoSpherePosition.z = Clamp(scaledXZ.y);
 
                         RecalculateTwoSphereCachedVectors(true, false, true);
                         break;
                     case QuaternionValue.q3:
-                        TwoSpherePosition.z = Clamp(TwoSpherePosition.z + delta);
+                        m_TwoSpherePosition.z = Clamp(TwoSpherePosition.z + delta);
                         var radiusXY = Mathf.Sqrt(1 - TwoSpherePosition.z * TwoSpherePosition.z);
-                        var scaledXY = radiusXY * TwoSphereCachedVectorXY.normalized;
-                        TwoSpherePosition.x = Clamp(scaledXY.x);
-                        TwoSpherePosition.y = Clamp(scaledXY.y);
+                        var scaledXY = radiusXY * m_TwoSphereCachedVectorXY.normalized;
+                        m_TwoSpherePosition.x = Clamp(scaledXY.x);
+                        m_TwoSpherePosition.y = Clamp(scaledXY.y);
 
                         RecalculateTwoSphereCachedVectors(false, true, true);
                         break;
@@ -120,42 +182,42 @@ public class State
                 switch(quaternionValue)
                 {
                     case QuaternionValue.q0:
-                        ThreeSpherePosition.w = Clamp(ThreeSpherePosition.w + delta);
+                        m_ThreeSpherePosition.w = Clamp(ThreeSpherePosition.w + delta);
                         var radiusXYZ = Mathf.Sqrt(1 - ThreeSpherePosition.w * ThreeSpherePosition.w);
-                        var scaledXYZ = radiusXYZ * ThreeSphereCachedVectorXYZ.normalized;
-                        ThreeSpherePosition.x = Clamp(scaledXYZ.x);
-                        ThreeSpherePosition.y = Clamp(scaledXYZ.y);
-                        ThreeSpherePosition.z = Clamp(scaledXYZ.z);
+                        var scaledXYZ = radiusXYZ * m_ThreeSphereCachedVectorXYZ.normalized;
+                        m_ThreeSpherePosition.x = Clamp(scaledXYZ.x);
+                        m_ThreeSpherePosition.y = Clamp(scaledXYZ.y);
+                        m_ThreeSpherePosition.z = Clamp(scaledXYZ.z);
 
                         RecalculateThreeSphereCachedVectors(true, true, true, false);
                         break;
                     case QuaternionValue.q1:
-                        ThreeSpherePosition.x = Clamp(ThreeSpherePosition.x + delta);
+                        m_ThreeSpherePosition.x = Clamp(ThreeSpherePosition.x + delta);
                         var radiusWYZ = Mathf.Sqrt(1 - ThreeSpherePosition.x * ThreeSpherePosition.x);
-                        var scaledWYZ = radiusWYZ * ThreeSphereCachedVectorWYZ.normalized;
-                        ThreeSpherePosition.w = Clamp(scaledWYZ.x);
-                        ThreeSpherePosition.y = Clamp(scaledWYZ.y);
-                        ThreeSpherePosition.z = Clamp(scaledWYZ.z);
+                        var scaledWYZ = radiusWYZ * m_ThreeSphereCachedVectorWYZ.normalized;
+                        m_ThreeSpherePosition.w = Clamp(scaledWYZ.x);
+                        m_ThreeSpherePosition.y = Clamp(scaledWYZ.y);
+                        m_ThreeSpherePosition.z = Clamp(scaledWYZ.z);
 
                         RecalculateThreeSphereCachedVectors(true, true, false, true);
                         break;
                     case QuaternionValue.q2:
-                        ThreeSpherePosition.y = Clamp(ThreeSpherePosition.y + delta);
+                        m_ThreeSpherePosition.y = Clamp(ThreeSpherePosition.y + delta);
                         var radiusWXZ = Mathf.Sqrt(1 - ThreeSpherePosition.y * ThreeSpherePosition.y);
-                        var scaledWXZ = radiusWXZ * ThreeSphereCachedVectorWXZ.normalized;
-                        ThreeSpherePosition.w = Clamp(scaledWXZ.x);
-                        ThreeSpherePosition.x = Clamp(scaledWXZ.y);
-                        ThreeSpherePosition.z = Clamp(scaledWXZ.z);
+                        var scaledWXZ = radiusWXZ * m_ThreeSphereCachedVectorWXZ.normalized;
+                        m_ThreeSpherePosition.w = Clamp(scaledWXZ.x);
+                        m_ThreeSpherePosition.x = Clamp(scaledWXZ.y);
+                        m_ThreeSpherePosition.z = Clamp(scaledWXZ.z);
 
                         RecalculateThreeSphereCachedVectors(true, false, true, true);
                         break;
                     case QuaternionValue.q3:
-                        ThreeSpherePosition.z = Clamp(ThreeSpherePosition.z + delta);
+                        m_ThreeSpherePosition.z = Clamp(ThreeSpherePosition.z + delta);
                         var radiusWXY = Mathf.Sqrt(1 - ThreeSpherePosition.z * ThreeSpherePosition.z);
-                        var scaledWXY = radiusWXY * ThreeSphereCachedVectorWXY.normalized;
-                        ThreeSpherePosition.w = Clamp(scaledWXY.x);
-                        ThreeSpherePosition.x = Clamp(scaledWXY.y);
-                        ThreeSpherePosition.y = Clamp(scaledWXY.z);
+                        var scaledWXY = radiusWXY * m_ThreeSphereCachedVectorWXY.normalized;
+                        m_ThreeSpherePosition.w = Clamp(scaledWXY.x);
+                        m_ThreeSpherePosition.x = Clamp(scaledWXY.y);
+                        m_ThreeSpherePosition.y = Clamp(scaledWXY.z);
 
                         RecalculateThreeSphereCachedVectors(false, true, true, true);
                         break;
@@ -168,32 +230,32 @@ public class State
     {
         if (xy)
         {
-            TwoSphereCachedVectorXY = new Vector2(TwoSpherePosition.x, TwoSpherePosition.y);
+            m_TwoSphereCachedVectorXY = new Vector2(TwoSpherePosition.x, TwoSpherePosition.y);
         }
 
         if (xz)
         {
-            TwoSphereCachedVectorXZ = new Vector2(TwoSpherePosition.x, TwoSpherePosition.z);
+            m_TwoSphereCachedVectorXZ = new Vector2(TwoSpherePosition.x, TwoSpherePosition.z);
         }
 
         if (yz)
         {
-            TwoSphereCachedVectorYZ = new Vector2(TwoSpherePosition.y, TwoSpherePosition.z);
+            m_TwoSphereCachedVectorYZ = new Vector2(TwoSpherePosition.y, TwoSpherePosition.z);
         }
 
-        if (TwoSphereCachedVectorXY.magnitude < 0.01f)
+        if (m_TwoSphereCachedVectorXY.magnitude < 0.01f)
         {
-            TwoSphereCachedVectorXY = new Vector2(1, 0);
+            m_TwoSphereCachedVectorXY = new Vector2(1, 0);
         }
 
-        if (TwoSphereCachedVectorXZ.magnitude < 0.01f)
+        if (m_TwoSphereCachedVectorXZ.magnitude < 0.01f)
         {
-            TwoSphereCachedVectorXZ = new Vector2(0, 1);
+            m_TwoSphereCachedVectorXZ = new Vector2(0, 1);
         }
 
-        if (TwoSphereCachedVectorYZ.magnitude < 0.01f)
+        if (m_TwoSphereCachedVectorYZ.magnitude < 0.01f)
         {
-            TwoSphereCachedVectorYZ = new Vector2(0, 1);
+            m_TwoSphereCachedVectorYZ = new Vector2(0, 1);
         }
     }
 
@@ -201,42 +263,42 @@ public class State
     {
         if (wxy)
         {
-            ThreeSphereCachedVectorWXY = new Vector3(ThreeSpherePosition.w, ThreeSpherePosition.x, ThreeSpherePosition.y);
+            m_ThreeSphereCachedVectorWXY = new Vector3(ThreeSpherePosition.w, ThreeSpherePosition.x, ThreeSpherePosition.y);
         }
         
         if (wxz)
         {
-            ThreeSphereCachedVectorWXZ = new Vector3(ThreeSpherePosition.w, ThreeSpherePosition.x, ThreeSpherePosition.z);
+            m_ThreeSphereCachedVectorWXZ = new Vector3(ThreeSpherePosition.w, ThreeSpherePosition.x, ThreeSpherePosition.z);
         }
         
         if (wyz)
         {
-            ThreeSphereCachedVectorWYZ = new Vector3(ThreeSpherePosition.w, ThreeSpherePosition.y, ThreeSpherePosition.z);
+            m_ThreeSphereCachedVectorWYZ = new Vector3(ThreeSpherePosition.w, ThreeSpherePosition.y, ThreeSpherePosition.z);
         }
         
         if (xyz)
         {
-            ThreeSphereCachedVectorXYZ = new Vector3(ThreeSpherePosition.x, ThreeSpherePosition.y, ThreeSpherePosition.z);
+            m_ThreeSphereCachedVectorXYZ = new Vector3(ThreeSpherePosition.x, ThreeSpherePosition.y, ThreeSpherePosition.z);
         }
 
-        if (ThreeSphereCachedVectorWXY.magnitude < 0.01f)
+        if (m_ThreeSphereCachedVectorWXY.magnitude < 0.01f)
         {
-            ThreeSphereCachedVectorWXY = new Vector3(1, 0, 0);
+            m_ThreeSphereCachedVectorWXY = new Vector3(1, 0, 0);
         }
 
-        if (ThreeSphereCachedVectorWXZ.magnitude < 0.01f)
+        if (m_ThreeSphereCachedVectorWXZ.magnitude < 0.01f)
         {
-            ThreeSphereCachedVectorWXZ = new Vector3(1, 0, 0);
+            m_ThreeSphereCachedVectorWXZ = new Vector3(1, 0, 0);
         }
 
-        if (ThreeSphereCachedVectorWYZ.magnitude < 0.01f)
+        if (m_ThreeSphereCachedVectorWYZ.magnitude < 0.01f)
         {
-            ThreeSphereCachedVectorWYZ = new Vector3(1, 0, 0);
+            m_ThreeSphereCachedVectorWYZ = new Vector3(1, 0, 0);
         }
 
-        if (ThreeSphereCachedVectorXYZ.magnitude < 0.01f)
+        if (m_ThreeSphereCachedVectorXYZ.magnitude < 0.01f)
         {
-            ThreeSphereCachedVectorXYZ = new Vector3(1, 0, 0);
+            m_ThreeSphereCachedVectorXYZ = new Vector3(1, 0, 0);
         }
     }
 

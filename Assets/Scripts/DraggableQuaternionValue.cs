@@ -118,10 +118,21 @@ public class DraggableQuaternionValue : MonoBehaviour, IDraggable
                 q3 = m_GlobalControl.State.TwoSpherePosition.z;
                 break;
             case Sphere.Three:
-                q0 = m_GlobalControl.State.ThreeSpherePosition.w;
-                q1 = m_GlobalControl.State.ThreeSpherePosition.x;
-                q2 = m_GlobalControl.State.ThreeSpherePosition.y;
-                q3 = m_GlobalControl.State.ThreeSpherePosition.z;
+                if (m_GlobalControl.State.Notation == Notation.AngleAxisRad ||
+                    m_GlobalControl.State.Notation == Notation.AngleAxisDeg)
+                {
+                    q0 = m_GlobalControl.State.ThreeSphereAngleAxis.w;
+                    q1 = m_GlobalControl.State.ThreeSphereAngleAxis.x;
+                    q2 = m_GlobalControl.State.ThreeSphereAngleAxis.y;
+                    q3 = m_GlobalControl.State.ThreeSphereAngleAxis.z;
+                }
+                else
+                {
+                    q0 = m_GlobalControl.State.ThreeSpherePosition.w;
+                    q1 = m_GlobalControl.State.ThreeSpherePosition.x;
+                    q2 = m_GlobalControl.State.ThreeSpherePosition.y;
+                    q3 = m_GlobalControl.State.ThreeSpherePosition.z;
+                }
 
                 break;
         }
@@ -189,16 +200,46 @@ public class DraggableQuaternionValue : MonoBehaviour, IDraggable
                 switch(Value)
                 {
                     case QuaternionValue.q0:
-                        displayText = $"\u03b8={Sign(q0, false)}{Format(q0)}";
+                        string angleToDisplay;
+                        if (m_GlobalControl.State.Notation == Notation.AngleAxisDeg)
+                        {
+                            angleToDisplay = FormatWithoutComma(q0 * Mathf.Rad2Deg);
+                        }
+                        else
+                        {
+                            angleToDisplay = Format(q0);
+                        }
+                        displayText = $"\u03b8={Sign(q0, false)}{angleToDisplay}";
                         break;
                     case QuaternionValue.q1:
-                        displayText = $"x={Sign(q1, false)}{Format(q1)}";
+                        if (q0 == 0)
+                        {
+                            displayText = $"x= ???";
+                        }
+                        else
+                        {
+                            displayText = $"x={Sign(q1, false)}{Format(q1)}";
+                        }
                         break;
                     case QuaternionValue.q2:
-                        displayText = $"y={Sign(q2, false)}{Format(q2)}";
+                        if (q0 == 0)
+                        {
+                            displayText = $"y= ???";
+                        }
+                        else
+                        {
+                            displayText = $"y={Sign(q2, false)}{Format(q2)}";
+                        }
                         break;
                     case QuaternionValue.q3:
-                        displayText = $"z={Sign(q3, false)}{Format(q3)}";
+                        if (q0 == 0)
+                        {
+                            displayText = $"z= ???";
+                        }
+                        else
+                        {
+                            displayText = $"z={Sign(q3, false)}{Format(q3)}";
+                        }
                         break;
                 }
                 break;
@@ -208,15 +249,6 @@ public class DraggableQuaternionValue : MonoBehaviour, IDraggable
     }
 
     // Private Methods
-    private string Format(float value){
-        var scaled = (int)(100 * Mathf.Abs(value));
-        var hundred = (scaled / 100) % 10;
-        var ten = (scaled / 10) % 10;
-        var one = scaled % 10;
-
-        return $"{hundred}.{ten}{one}";
-    }
-
     private char Sign(float value, bool showPlus)
     {
         if (value < 0)
@@ -231,6 +263,38 @@ public class DraggableQuaternionValue : MonoBehaviour, IDraggable
             else
             {
                 return ' ';
+            }
+        }
+    }
+
+    private string Format(float value){
+        var scaled = (int)(100 * Mathf.Abs(value));
+        var hundred = (scaled / 100) % 10;
+        var ten = (scaled / 10) % 10;
+        var one = scaled % 10;
+
+        return $"{hundred}.{ten}{one}";
+    }
+
+    private string FormatWithoutComma(float value){
+        var scaled = (int)Mathf.Abs(value);
+        var hundred = (scaled / 100) % 10;
+        var ten = (scaled / 10) % 10;
+        var one = scaled % 10;
+
+        if (hundred != 0)
+        {
+            return $"{hundred}{ten}{one}";
+        }
+        else
+        {
+            if (ten != 0)
+            {
+                return $" {ten}{one}";
+            }
+            else
+            {
+                return $"  {one}";
             }
         }
     }

@@ -13,7 +13,10 @@ public class PointMover : MonoBehaviour
 
     [SerializeField] private Sphere m_Sphere;
 
-    [SerializeField] private float m_Debug;
+    [SerializeField] private Vector3 m_Debug;
+
+    // Members
+    private float m_CachedSignW;
 
     // Unity Event Methods
     private void LateUpdate()
@@ -41,8 +44,6 @@ public class PointMover : MonoBehaviour
         }
 
         this.transform.position = 0.9f * 0.5f * position;
-
-        m_Debug = q0;
 
         if (q0 < 0)
         {
@@ -83,14 +84,43 @@ public class PointMover : MonoBehaviour
 
                 var position = new Vector3(positionXY.x, positionXY.y, positionZ);
                 var rotatedPosition = this.transform.rotation * position;
-                m_GlobalControl.State.TwoSpherePosition = rotatedPosition;
 
+                m_GlobalControl.State.TwoSpherePosition = rotatedPosition;
                 m_GlobalControl.State.RecalculateTwoSphereCachedVectors(true, true, true);
                 break;
             }
             case Sphere.Three:
             {
-                
+                Vector3 positionXYZ;
+
+                var magnitudeSquared = Vector2.Dot(normalizedImagePosition, normalizedImagePosition);
+                if (magnitudeSquared > 1f)
+                {
+                    positionXYZ = normalizedImagePosition / Mathf.Sqrt(magnitudeSquared);
+                    magnitudeSquared = 1;
+                }
+                else
+                {
+                    positionXYZ = new Vector3
+                    (
+                        normalizedImagePosition.x,
+                        normalizedImagePosition.y,
+                        0
+                    );
+                }
+
+                var rotatedPositionXYZ = this.transform.rotation * positionXYZ;
+                var previousW = m_GlobalControl.State.ThreeSpherePosition.w;
+                m_CachedSignW = previousW != 0 ? Mathf.Sign(previousW) : m_CachedSignW;
+                var w = m_CachedSignW * Mathf.Sqrt(1 - magnitudeSquared);
+
+                m_GlobalControl.State.ThreeSpherePosition = new Vector4(
+                    rotatedPositionXYZ.x,
+                    rotatedPositionXYZ.y,
+                    rotatedPositionXYZ.z,
+                    w
+                );
+                m_GlobalControl.State.RecalculateThreeSphereCachedVectors(true, true, true, true);
                 break;
             }
         }

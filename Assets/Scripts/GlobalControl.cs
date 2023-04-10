@@ -130,15 +130,29 @@ public class GlobalControl : MonoBehaviour
         pointerEventData.position = Input.mousePosition;
         var results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(pointerEventData, results);
+
+        bool isPointedOverDropdownList = false;
         foreach(var result in results)
         {
-            var draggable = result.gameObject?.GetComponent<IDraggable>();
-            if (draggable == null)
+            if (result.gameObject.name == "Dropdown List")
             {
-                continue;
+                isPointedOverDropdownList = true;
+                break;
             }
+        }
 
-            draggable.IsPointerOver = true;
+        if (!isPointedOverDropdownList)
+        {
+            foreach(var result in results)
+            {
+                var draggable = result.gameObject?.GetComponent<IDraggable>();
+                if (draggable == null)
+                {
+                    continue;
+                }
+
+                draggable.IsPointerOver = true;
+            }
         }
 
         if (!Input.GetKey(KeyCode.Mouse0))

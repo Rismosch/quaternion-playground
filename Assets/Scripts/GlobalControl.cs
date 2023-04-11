@@ -134,7 +134,7 @@ public class GlobalControl : MonoBehaviour
         bool isPointedOverDropdownList = false;
         foreach(var result in results)
         {
-            if (result.gameObject.name == "Dropdown List")
+            if (result.gameObject.name.Contains("Dropdown"))
             {
                 isPointedOverDropdownList = true;
                 break;

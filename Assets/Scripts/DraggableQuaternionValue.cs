@@ -203,7 +203,7 @@ public class DraggableQuaternionValue : MonoBehaviour, IDraggable
                         string angleToDisplay;
                         if (m_GlobalControl.State.Notation == Notation.AngleAxisDeg)
                         {
-                            angleToDisplay = FormatWithoutComma(q0 * Mathf.Rad2Deg);
+                            angleToDisplay = $"{FormatWithoutComma(q0 * Mathf.Rad2Deg)}\u00b0";
                         }
                         else
                         {

@@ -71,6 +71,9 @@ public class State
     private Vector4 m_ThreeSpherePosition = new Vector4(0, 0, 0, 1);
     private Vector4 m_ThreeSphereAngleAxis = new Vector4(1, 0, 0, 0);
 
+    private float m_CachedSignX = 1;
+    private float m_CachedSignY = 1;
+
     private Vector2 m_TwoSphereCachedVectorXY = new Vector2(1, 0);
     private Vector2 m_TwoSphereCachedVectorXZ = new Vector2(1, 0);
     private Vector2 m_TwoSphereCachedVectorYZ = new Vector2(1, 0);
@@ -200,11 +203,15 @@ public class State
                 {
                     case QuaternionValue.q1:
                         m_OneSpherePosition.x = Mathf.Clamp(OneSpherePosition.x + delta, -1f, 1f);
-                        m_OneSpherePosition.y = Mathf.Sqrt(1 - OneSpherePosition.x * OneSpherePosition.x);
+                        var previousY = m_OneSpherePosition.y;
+                        m_CachedSignY = previousY == 0 ? m_CachedSignY : Mathf.Sign(previousY);
+                        m_OneSpherePosition.y = m_CachedSignY * Mathf.Sqrt(1 - OneSpherePosition.x * OneSpherePosition.x);
                         break;
                     case QuaternionValue.q2:
                         m_OneSpherePosition.y = Mathf.Clamp(OneSpherePosition.y + delta, -1f, 1f);
-                        m_OneSpherePosition.x = Mathf.Sqrt(1 - OneSpherePosition.y * OneSpherePosition.y);
+                        var previousX = m_OneSpherePosition.x;
+                        m_CachedSignX = previousX == 0 ? m_CachedSignX : Mathf.Sign(previousX);
+                        m_OneSpherePosition.x = m_CachedSignX * Mathf.Sqrt(1 - OneSpherePosition.y * OneSpherePosition.y);
                         break;
                 }
                 break;

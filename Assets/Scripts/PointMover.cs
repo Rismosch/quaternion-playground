@@ -40,6 +40,7 @@ public class PointMover : MonoBehaviour
                 q0 = m_GlobalControl.State.TwoSpherePosition.y;
                 if (m_Project)
                 {
+                    position.y = position.z;
                     position.z = 0;
                 }
                 break;
@@ -86,6 +87,21 @@ public class PointMover : MonoBehaviour
                 }
                 case Sphere.Two:
                 {
+                    Vector2 positionXZ;
+
+                    var magnitudeSquared = Vector2.Dot(normalizedImagePosition, normalizedImagePosition);
+                    if (magnitudeSquared > 1)
+                    {
+                        positionXZ = normalizedImagePosition / Mathf.Sqrt(magnitudeSquared);
+                        magnitudeSquared = 1;
+                    }
+                    else
+                    {
+                        positionXZ = normalizedImagePosition;
+                    }
+
+                    m_Debug = positionXZ;
+
                     break;
                 }
                 case Sphere.Three:

@@ -21,7 +21,7 @@ public class AxisRotator : MonoBehaviour
     {
         var cameraForward = m_Camera.rotation * Vector3.forward;
 
-        var upward = Vector3.Cross(cameraForward, m_Right);
+        var upward = Vector3.Cross(m_Right, cameraForward);
         var forward = Vector3.Cross(upward, m_Right);
 
         if (upward.sqrMagnitude > 1e-7 && forward.sqrMagnitude > 1e-7)

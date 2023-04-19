@@ -14,11 +14,10 @@ public class PointMover : MonoBehaviour
     [SerializeField] private Sphere m_Sphere;
     [SerializeField] private bool m_Project;
 
-    [SerializeField] private Vector3 m_Debug;
-
     // Members
-    private float m_CachedSignY = 1;
-    private float m_CachedSignW = 1;
+    private float m_OneSphereCachedSignY = 1;
+    private float m_TwoSphereCachedSignY = 1;
+    private float m_ThreeSphereCachedSignW = 1;
 
     // Unity Event Methods
     private void LateUpdate()
@@ -77,10 +76,8 @@ public class PointMover : MonoBehaviour
                 {
                     var x = Mathf.Clamp(normalizedImagePosition.x, -1f, 1f);
                     var previousY = m_GlobalControl.State.OneSpherePosition.y;
-                    m_CachedSignY = previousY == 0 ?  m_CachedSignY : Mathf.Sign(previousY);
-                    var y = m_CachedSignY * Mathf.Sqrt(1 - x * x);
-
-                    m_Debug = new Vector3(y, 0 , 0);
+                    m_OneSphereCachedSignY = previousY == 0 ?  m_OneSphereCachedSignY : Mathf.Sign(previousY);
+                    var y = m_OneSphereCachedSignY * Mathf.Sqrt(1 - x * x);
 
                     m_GlobalControl.State.OneSpherePosition = new Vector2(x, y);
                     break;
@@ -100,7 +97,11 @@ public class PointMover : MonoBehaviour
                         positionXZ = normalizedImagePosition;
                     }
 
-                    m_Debug = positionXZ;
+                    var previousY = m_GlobalControl.State.TwoSpherePosition.y;
+                    m_TwoSphereCachedSignY = previousY == 0 ? m_TwoSphereCachedSignY : Mathf.Sign(previousY);
+                    var y = m_TwoSphereCachedSignY * Mathf.Sqrt(1 - magnitudeSquared);
+
+                    m_GlobalControl.State.TwoSpherePosition = new Vector3(positionXZ.x, y, positionXZ.y);
 
                     break;
                 }
@@ -126,8 +127,8 @@ public class PointMover : MonoBehaviour
 
                     var rotatedPositionXYZ = this.transform.rotation * positionXYZ;
                     var previousW = m_GlobalControl.State.ThreeSpherePosition.w;
-                    m_CachedSignW = previousW == 0 ? m_CachedSignW : Mathf.Sign(previousW);
-                    var w = m_CachedSignW * Mathf.Sqrt(1 - magnitudeSquared);
+                    m_ThreeSphereCachedSignW = previousW == 0 ? m_ThreeSphereCachedSignW : Mathf.Sign(previousW);
+                    var w = m_ThreeSphereCachedSignW * Mathf.Sqrt(1 - magnitudeSquared);
 
                     m_GlobalControl.State.ThreeSpherePosition = new Vector4(
                         rotatedPositionXYZ.x,

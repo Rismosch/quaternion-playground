@@ -10,7 +10,7 @@ Shader "Unlit/Line"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags { "RenderType"="Transparent" "Queue"="Transparent" }
         LOD 100
         Blend SrcAlpha OneMinusSrcAlpha
         cull Off

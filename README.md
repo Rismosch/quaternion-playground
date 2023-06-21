@@ -12,6 +12,8 @@ Unity demo project to visualize quaternions, inspired by the book "Visualizing Q
 - while changing quaternion value, press Ctrl to make finer adjustments
 - set quaterion value to 0 by right clicking it
 
+## Links
+
 See a fully embedded, working version on my website: https://www.rismosch.com/article?id=quaternion-playground
 
 Or check it out on itch.io: https://rismosch.itch.io/quaternion-playground
